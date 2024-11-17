@@ -291,11 +291,6 @@
 						"internalType": "string",
 						"name": "symbol",
 						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "_imageURL",
-						"type": "string"
 					}
 				],
 				"name": "initialize",
@@ -584,7 +579,7 @@
 		"compilationTarget": {
 			"contracts/token factory/CustomToken.sol": "CustomToken"
 		},
-		"evmVersion": "cancun",
+		"evmVersion": "paris",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"
@@ -645,11 +640,11 @@
 			]
 		},
 		"contracts/token factory/CustomToken.sol": {
-			"keccak256": "0xfdfee5cc77fc463c2b3ba4b4567a5f7700f6d7a248986ee3ac93761d9f140153",
+			"keccak256": "0x30dbc416bdf2dabb4893e6fa2f27b1c19d6744e3f1ebfdec0f8272b4fe82be4e",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://288c6cba89278acff16c58bdebcba8f559ed3b1764a7ab2ee11b15ad7a1bb852",
-				"dweb:/ipfs/QmcqtWTqike2PmPqf1SEVSW71uLVNrA6Tg4qvahZVYbUUN"
+				"bzz-raw://c0e8f50296bad4367a365de9976a2cacbe36908b4f457226cc9fb1a4521bf593",
+				"dweb:/ipfs/QmZ5p75TqSbyQzbakbYbdQvdBWeiKSBAtzFQrLSRKVk7tJ"
 			]
 		}
 	},

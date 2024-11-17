@@ -53,7 +53,7 @@ contract TokenFactory is Ownable {
         tokenByName[name] = tokenAddress;
 
         // Création automatique de la pool de liquidité
-        LiquidityPool pool = new LiquidityPool();
+        LiquidityPool pool = new LiquidityPool(devAddress);
         pool.initialize{value: msg.value - devFee}(tokenAddress, address(this), poolTokenShare, 2); // Exemple de taxe de 2%
         
         // Transfert des tokens à la pool de liquidité
@@ -76,5 +76,9 @@ contract TokenFactory is Ownable {
             LiquidityPool(allPools[i]).updateTaxPercentage(newTaxPercentage);
             emit TaxUpdated(allPools[i], newTaxPercentage);
         }
+    }
+
+    function getAllTokens() external view returns (address[] memory) {
+        return allTokens;
     }
 }

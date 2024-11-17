@@ -47,6 +47,31 @@
 					{
 						"indexed": true,
 						"internalType": "address",
+						"name": "trader",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "penaltyAmount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newAmountOut",
+						"type": "uint256"
+					}
+				],
+				"name": "PenaltyApplied",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
 						"name": "fromToken",
 						"type": "address"
 					},
@@ -102,34 +127,20 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "ethAmount",
+						"name": "amountIn",
 						"type": "uint256"
 					}
 				],
-				"name": "calculateSlippageOnBuy",
+				"name": "calculatePenalty",
 				"outputs": [
 					{
 						"internalType": "uint256",
-						"name": "slippage",
+						"name": "penaltyAmount",
 						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
+					},
 					{
 						"internalType": "uint256",
-						"name": "tokenAmount",
-						"type": "uint256"
-					}
-				],
-				"name": "calculateSlippageOnSell",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "slippage",
+						"name": "penaltyPercentage",
 						"type": "uint256"
 					}
 				],
@@ -144,32 +155,6 @@
 						"internalType": "address",
 						"name": "",
 						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "getPriceInNative",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "getPriceInToken",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -201,6 +186,19 @@
 				"name": "initialize",
 				"outputs": [],
 				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "penaltyThreshold",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -316,7 +314,7 @@
 		"compilationTarget": {
 			"contracts/token factory/LiquidityPool.sol": "LiquidityPool"
 		},
-		"evmVersion": "cancun",
+		"evmVersion": "paris",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"
@@ -337,11 +335,11 @@
 			]
 		},
 		"contracts/token factory/LiquidityPool.sol": {
-			"keccak256": "0xab398b2cfac4aaff4dcd8a62d98abd051a6acc191aac78ae462f7c19082444ce",
+			"keccak256": "0x63404211158cfeba4bfe4b25f379c243831a6cbc8b3deefe8c03d174da872b26",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://d179255a046cd0d9b898a572bd401ed8426d14ef5472f05844dda7642f7c3333",
-				"dweb:/ipfs/QmeCNcThpD777obdxnf4sU7ukbZB3vmpvDpqTD4NeP2UDw"
+				"bzz-raw://fbdf10479a6c6a72da3f9f6d723b5fbf348e9a1a6d3726e01db849bc46c689ba",
+				"dweb:/ipfs/QmPNWyZoRt4vUdwVBMrYQYPGuEcp2A2pL8EBF5oB4ZFMiq"
 			]
 		}
 	},

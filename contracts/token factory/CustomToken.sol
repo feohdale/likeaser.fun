@@ -5,23 +5,28 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract CustomToken is ERC20, Ownable {
+    string private _customName;
+    string private _customSymbol;
+    bool private initialized;
     string public imageURL; // Lien vers l'image associée au token
 
-    constructor() ERC20("", "") Ownable(msg.sender) {
-        // Le constructeur est vide pour faciliter la publication sur Etherscan
+    constructor() ERC20("", "") Ownable(msg.sender) {}
+
+    // Fonction d'initialisation pour définir le nom et le symbole après le déploiement
+    function initialize(string memory name, string memory symbol) external {
+        require(!initialized, "Token already initialized");
+        _customName = name;
+        _customSymbol = symbol;
+        initialized = true;
     }
 
-    // Fonction d'initialisation appelée après le déploiement du contrat
-    function initialize(string memory name, string memory symbol) external onlyOwner {
-        _initializeToken(name, symbol);
+    // Fonctions pour récupérer le nom et le symbole personnalisés
+    function name() public view override returns (string memory) {
+        return _customName;
     }
 
-    // Fonction interne pour initialiser le nom et le symbole
-    function _initializeToken(string memory name, string memory symbol) internal {
-        assembly {
-            sstore(0x0, name)  // Stocke le nom du token
-            sstore(0x1, symbol) // Stocke le symbole du token
-        }
+    function symbol() public view override returns (string memory) {
+        return _customSymbol;
     }
 
     // Permet uniquement au propriétaire de minter des tokens
