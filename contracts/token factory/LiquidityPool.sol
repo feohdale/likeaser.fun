@@ -12,6 +12,7 @@ contract LiquidityPool is ReentrancyGuard {
     uint256 public taxPercentage; // Taux de taxe pour les transactions dans la pool
     address public devAddress; // Adresse dédiée pour recevoir les taxes
     uint256 public penaltyThreshold = 20; // Seuil de 20% pour appliquer la pénalité
+    bool public penaltiesEnabled = false; // Indique si les pénalités sont activées
 
     modifier onlyFactory() {
         require(msg.sender == tokenFactory, "Caller is not the TokenFactory");
@@ -22,23 +23,24 @@ contract LiquidityPool is ReentrancyGuard {
     event LiquidityAdded(address indexed provider, uint256 amountToken, uint256 amountNative);
     event TaxPercentageUpdated(uint256 newTaxPercentage);
     event PenaltyApplied(address indexed trader, uint256 penaltyAmount, uint256 newAmountOut);
+    event PenaltiesStatusUpdated(bool enabled);
 
-    constructor(address _devAddress) {
+    constructor(address _devAddress, address _tokenFactory) {
         require(_devAddress != address(0), "Developer address cannot be zero address");
+        require(_tokenFactory != address(0), "TokenFactory address cannot be zero address");
         devAddress = _devAddress;
+        tokenFactory = _tokenFactory;
     }
 
     function initialize(
         address _token0,
-        address _tokenFactory,
         uint256 _initialTokenReserve,
         uint256 _taxPercentage
-    ) external payable nonReentrant {
-        require(token0 == address(0), "Pool already initialized"); // Assure une initialisation unique
+    ) external payable nonReentrant onlyFactory {
+        require(token0 == address(0), "Pool already initialized");
         require(msg.value > 0, "Initial native token amount must be greater than zero");
 
         token0 = _token0;
-        tokenFactory = _tokenFactory;
         taxPercentage = _taxPercentage;
 
         reserve0 = _initialTokenReserve;
@@ -50,6 +52,11 @@ contract LiquidityPool is ReentrancyGuard {
     function updateTaxPercentage(uint256 newTaxPercentage) external onlyFactory {
         taxPercentage = newTaxPercentage;
         emit TaxPercentageUpdated(newTaxPercentage);
+    }
+
+    function togglePenalties(bool enable) external onlyFactory {
+        penaltiesEnabled = enable;
+        emit PenaltiesStatusUpdated(enable);
     }
 
     function buyToken() external payable nonReentrant returns (uint256 amountOut) {
@@ -82,7 +89,7 @@ contract LiquidityPool is ReentrancyGuard {
         uint256 amountInAfterTax = amountIn - tax;
 
         uint256 penalty = 0;
-        if (sellPercentage > penaltyThreshold) {
+        if (penaltiesEnabled && sellPercentage > penaltyThreshold) {
             penalty = ((sellPercentage - penaltyThreshold) * amountInAfterTax) / 100;
             amountInAfterTax -= penalty;
 
@@ -110,7 +117,7 @@ contract LiquidityPool is ReentrancyGuard {
         uint256 circulatingSupply = IERC20(token0).totalSupply();
         uint256 sellPercentage = (amountIn * 100) / circulatingSupply;
 
-        if (sellPercentage > penaltyThreshold) {
+        if (penaltiesEnabled && sellPercentage > penaltyThreshold) {
             penaltyPercentage = sellPercentage - penaltyThreshold;
             penaltyAmount = (penaltyPercentage * amountIn) / 100;
         } else {

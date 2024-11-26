@@ -68,12 +68,12 @@
 					},
 					{
 						"indexed": false,
-						"internalType": "uint256",
-						"name": "newTax",
-						"type": "uint256"
+						"internalType": "bool",
+						"name": "enabled",
+						"type": "bool"
 					}
 				],
-				"name": "TaxUpdated",
+				"name": "PenaltiesStatusUpdated",
 				"type": "event"
 			},
 			{
@@ -167,30 +167,16 @@
 						"type": "uint256"
 					}
 				],
-				"name": "allPools",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
 				"name": "allTokens",
 				"outputs": [
 					{
 						"internalType": "address",
-						"name": "",
+						"name": "tokenAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "liquidityPoolAddress",
 						"type": "address"
 					}
 				],
@@ -236,6 +222,44 @@
 			},
 			{
 				"inputs": [],
+				"name": "getAllTokens",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "tokenAddress",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "liquidityPoolAddress",
+								"type": "address"
+							}
+						],
+						"internalType": "struct TokenFactory.TokenInfo[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getTotalTokensCreated",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "owner",
 				"outputs": [
 					{
@@ -250,6 +274,19 @@
 			{
 				"inputs": [],
 				"name": "renounceOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bool",
+						"name": "enable",
+						"type": "bool"
+					}
+				],
+				"name": "togglePenaltiesForAllPools",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -301,19 +338,6 @@
 					}
 				],
 				"name": "transferOwnership",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "newTaxPercentage",
-						"type": "uint256"
-					}
-				],
-				"name": "updateTaxForAllPools",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -384,6 +408,14 @@
 				"dweb:/ipfs/QmcLLJppxKeJWqHxE2CUkcfhuRTgHSn8J4kijcLa5MYhSt"
 			]
 		},
+		"@openzeppelin/contracts/security/ReentrancyGuard.sol": {
+			"keccak256": "0xa535a5df777d44e945dd24aa43a11e44b024140fc340ad0dfe42acf4002aade1",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://41319e7f621f2dc3733511332c4fd032f8e32ad2aa7fd6f665c19741d9941a34",
+				"dweb:/ipfs/QmcYR3bd862GD1Bc7jwrU9bGxrhUu5na1oP964bDCu2id1"
+			]
+		},
 		"@openzeppelin/contracts/token/ERC20/ERC20.sol": {
 			"keccak256": "0xc3e1fa9d1987f8d349dfb4d6fe93bf2ca014b52ba335cfac30bfe71e357e6f80",
 			"license": "MIT",
@@ -417,27 +449,27 @@
 			]
 		},
 		"contracts/token factory/CustomToken.sol": {
-			"keccak256": "0x7565ad6b572ce4e350ab1e13e78b28666b9df4d4b44e8b2ff503af017f1d3ce0",
+			"keccak256": "0x30dbc416bdf2dabb4893e6fa2f27b1c19d6744e3f1ebfdec0f8272b4fe82be4e",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://b9653c837679177cc564cfd0c8eb9646afe55036930cf1632bf83f06cfc082ce",
-				"dweb:/ipfs/QmaC9eKdPVAD96GxZC8R7opiSG2PHLevp4thJtHH3Vzd3Q"
+				"bzz-raw://c0e8f50296bad4367a365de9976a2cacbe36908b4f457226cc9fb1a4521bf593",
+				"dweb:/ipfs/QmZ5p75TqSbyQzbakbYbdQvdBWeiKSBAtzFQrLSRKVk7tJ"
 			]
 		},
 		"contracts/token factory/LiquidityPool.sol": {
-			"keccak256": "0xb6ebbe6c905de899f95aaaebce33bf82869b9d07d39d455786fdb856408ad7bd",
+			"keccak256": "0xc975577a23c037b69311cdd4c1097d0ddada68495f62cd09ef3fed1330857aad",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://4a04b122318da22941fe8a13bb75d6857a320676f97b0aaf1645892897e1fafc",
-				"dweb:/ipfs/QmeiyZEZRtxt6jxc1VWZAdTvNxrYkWP7xgyDzF5jGU7byk"
+				"bzz-raw://7e6e3a64e36a89edf442f72d71e080f78f6f76bf74ce8f1bc4032b9b2b3cf92f",
+				"dweb:/ipfs/QmYEyssKmyDYcYih3QqMMK99Tatit6VV3WngwYActo69Rv"
 			]
 		},
 		"contracts/token factory/tokenfactoryV2.sol": {
-			"keccak256": "0x5a637f846b8151f90ba1ddda60cd2f31aac78489368be155deafbedeae3d0caa",
+			"keccak256": "0xbd22e585a0cb336666a140750a8c7fcf27ab428684f79cf64e92893b73f1363b",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://b3c51bef9e0a0845aad8e77b902fddb4a835c050e103256c4983d9ee83a900d4",
-				"dweb:/ipfs/QmaHBvbzUAF4jghoA1sK4v7MR2x7RMtfsyCUJCkHhhMqYA"
+				"bzz-raw://9ce229dcdab67bce72c12daa53119e30977e592d84f95e70efb407d5d78eb768",
+				"dweb:/ipfs/QmVYREMzZkHjrm4Hu3PWpBSiU9qTzpafuUfdT5ZxEuxvey"
 			]
 		}
 	},

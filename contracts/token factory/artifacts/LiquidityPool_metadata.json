@@ -11,6 +11,11 @@
 						"internalType": "address",
 						"name": "_devAddress",
 						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_tokenFactory",
+						"type": "address"
 					}
 				],
 				"stateMutability": "nonpayable",
@@ -39,6 +44,19 @@
 					}
 				],
 				"name": "LiquidityAdded",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "enabled",
+						"type": "bool"
+					}
+				],
+				"name": "PenaltiesStatusUpdated",
 				"type": "event"
 			},
 			{
@@ -168,11 +186,6 @@
 						"type": "address"
 					},
 					{
-						"internalType": "address",
-						"name": "_tokenFactory",
-						"type": "address"
-					},
-					{
 						"internalType": "uint256",
 						"name": "_initialTokenReserve",
 						"type": "uint256"
@@ -186,6 +199,19 @@
 				"name": "initialize",
 				"outputs": [],
 				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "penaltiesEnabled",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -260,6 +286,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "bool",
+						"name": "enable",
+						"type": "bool"
+					}
+				],
+				"name": "togglePenalties",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "token0",
 				"outputs": [
@@ -314,7 +353,7 @@
 		"compilationTarget": {
 			"contracts/token factory/LiquidityPool.sol": "LiquidityPool"
 		},
-		"evmVersion": "paris",
+		"evmVersion": "cancun",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"
@@ -326,6 +365,14 @@
 		"remappings": []
 	},
 	"sources": {
+		"@openzeppelin/contracts/security/ReentrancyGuard.sol": {
+			"keccak256": "0xa535a5df777d44e945dd24aa43a11e44b024140fc340ad0dfe42acf4002aade1",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://41319e7f621f2dc3733511332c4fd032f8e32ad2aa7fd6f665c19741d9941a34",
+				"dweb:/ipfs/QmcYR3bd862GD1Bc7jwrU9bGxrhUu5na1oP964bDCu2id1"
+			]
+		},
 		"@openzeppelin/contracts/token/ERC20/IERC20.sol": {
 			"keccak256": "0x4ce6e9f30dba5ae30f26321dc851b669caf3f953f8c832304d05df2a523f1af3",
 			"license": "MIT",
@@ -335,11 +382,11 @@
 			]
 		},
 		"contracts/token factory/LiquidityPool.sol": {
-			"keccak256": "0x63404211158cfeba4bfe4b25f379c243831a6cbc8b3deefe8c03d174da872b26",
+			"keccak256": "0xc975577a23c037b69311cdd4c1097d0ddada68495f62cd09ef3fed1330857aad",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://fbdf10479a6c6a72da3f9f6d723b5fbf348e9a1a6d3726e01db849bc46c689ba",
-				"dweb:/ipfs/QmPNWyZoRt4vUdwVBMrYQYPGuEcp2A2pL8EBF5oB4ZFMiq"
+				"bzz-raw://7e6e3a64e36a89edf442f72d71e080f78f6f76bf74ce8f1bc4032b9b2b3cf92f",
+				"dweb:/ipfs/QmYEyssKmyDYcYih3QqMMK99Tatit6VV3WngwYActo69Rv"
 			]
 		}
 	},

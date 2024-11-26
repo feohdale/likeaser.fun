@@ -579,7 +579,7 @@
 		"compilationTarget": {
 			"contracts/token factory/CustomToken.sol": "CustomToken"
 		},
-		"evmVersion": "paris",
+		"evmVersion": "cancun",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"
