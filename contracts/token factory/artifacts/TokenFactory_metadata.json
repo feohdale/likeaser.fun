@@ -633,19 +633,19 @@
 			]
 		},
 		"contracts/token factory/LiquidityPool.sol": {
-			"keccak256": "0x2fc9307a43e1802bc8a3406f4d2245ff010c6ab01b6e7f343586152fef574b3c",
+			"keccak256": "0xa90ddc2af50ffd7f89e15b35eeb8e5600da81a6b7ab023a56ad08d2259150935",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://69adb64322bdf184fe7790be6a515fc07b54aff92fac9dae0f47af149ce61953",
-				"dweb:/ipfs/QmVSnTWVHU9iZK5xe9rkNdSb3DQLhWruCoK6Wv8fmn5KeG"
+				"bzz-raw://1adf3654850b117c7e8cd572e13516bfcc343f4f90207f140d2cc8b401fcda5b",
+				"dweb:/ipfs/QmR5x9ScBLBVGtgP1QcTiKUkJ9AD8amsZgqobxB8opuWyN"
 			]
 		},
 		"contracts/token factory/tokenfactoryV2.sol": {
-			"keccak256": "0xd86c88e4f7c4eae717f19116babd092a0663b9d8251f32bc762a24eb42d4ff3f",
+			"keccak256": "0xabeb266138b9baa2f92fc5f589777a1f04c8eec2e53f0291ed6216ec4248fd08",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://b3ec1c210568eaa4cd6bd51dd7a96287f2200a30f948ed482ed8f8d90d1a3fed",
-				"dweb:/ipfs/Qma6pqokFvYUsCvKFKivExzdyDvLGStwDoFdLF34xXPuEb"
+				"bzz-raw://43814fc2110b203727340281caa118cb4e97ed338d1d087d397115b57024c420",
+				"dweb:/ipfs/QmX6GS9RmH526AkMgSAuzQmHGefu5szQyVoj8NMKiEK8B7"
 			]
 		}
 	},

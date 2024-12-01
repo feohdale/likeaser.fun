@@ -20,7 +20,7 @@ contract TokenFactory is Ownable {
 
     uint256 public constant DAO_RETRIBUTION_PERCENTAGE = 30; // 3% in thousandths (30/1000)
     uint256 public constant INITIAL_TOKEN_SUPPLY = 2_100_000_000 * 10 ** 18; // 2.1 billion tokens
-    uint256 public creationCost = 1 ether; // Cost to create a token
+    uint256 public creationCost = 0.0002 ether; // Cost to create a token
     uint256 public constant MAX_TOTAL_TAX = 50; // Maximum total tax in thousandths (5%)
 
     uint256 public defaultBuyTax = 0; // Default buy tax for new pools (in thousandths)
