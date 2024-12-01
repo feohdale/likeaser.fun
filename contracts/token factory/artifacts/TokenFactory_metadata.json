@@ -47,19 +47,32 @@
 				"anonymous": false,
 				"inputs": [
 					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "poolAddress",
-						"type": "address"
-					},
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newCost",
+						"type": "uint256"
+					}
+				],
+				"name": "CreationCostUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
 					{
 						"indexed": false,
 						"internalType": "uint256",
 						"name": "newBuyTax",
 						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newSellTax",
+						"type": "uint256"
 					}
 				],
-				"name": "BuyTaxUpdated",
+				"name": "DefaultTaxesUpdated",
 				"type": "event"
 			},
 			{
@@ -93,11 +106,30 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
+						"name": "newBuyTax",
+						"type": "uint256"
+					}
+				],
+				"name": "PoolBuyTaxUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "poolAddress",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
 						"name": "newSellTax",
 						"type": "uint256"
 					}
 				],
-				"name": "SellTaxUpdated",
+				"name": "PoolSellTaxUpdated",
 				"type": "event"
 			},
 			{
@@ -130,19 +162,6 @@
 				],
 				"name": "TokenCreated",
 				"type": "event"
-			},
-			{
-				"inputs": [],
-				"name": "CREATION_COST",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
 			},
 			{
 				"inputs": [],
@@ -233,12 +252,51 @@
 			},
 			{
 				"inputs": [],
+				"name": "creationCost",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "daoAddress",
 				"outputs": [
 					{
 						"internalType": "address",
 						"name": "",
 						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "defaultBuyTax",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "defaultSellTax",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -369,6 +427,37 @@
 			{
 				"inputs": [
 					{
+						"internalType": "uint256",
+						"name": "newCost",
+						"type": "uint256"
+					}
+				],
+				"name": "updateCreationCost",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "newBuyTax",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "newSellTax",
+						"type": "uint256"
+					}
+				],
+				"name": "updateDefaultTaxes",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "address",
 						"name": "poolAddress",
 						"type": "address"
@@ -418,22 +507,6 @@
 			},
 			"kind": "dev",
 			"methods": {
-				"createToken(string,string)": {
-					"params": {
-						"name": "The name of the token",
-						"symbol": "The symbol of the token"
-					}
-				},
-				"getAllTokens()": {
-					"returns": {
-						"_0": "An array of TokenInfo structs containing token and pool addresses"
-					}
-				},
-				"getTotalTokensCreated()": {
-					"returns": {
-						"_0": "The total number of created tokens"
-					}
-				},
 				"owner()": {
 					"details": "Returns the address of the current owner."
 				},
@@ -443,16 +516,9 @@
 				"transferOwnership(address)": {
 					"details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
 				},
-				"updatePoolBuyTax(address,uint256)": {
+				"updateCreationCost(uint256)": {
 					"params": {
-						"newBuyTax": "The new buy tax in thousandths",
-						"poolAddress": "The address of the liquidity pool"
-					}
-				},
-				"updatePoolSellTax(address,uint256)": {
-					"params": {
-						"newSellTax": "The new sell tax in thousandths",
-						"poolAddress": "The address of the liquidity pool"
+						"newCost": "The new creation cost in wei"
 					}
 				}
 			},
@@ -465,16 +531,22 @@
 					"notice": "Creates a new token and its associated liquidity pool"
 				},
 				"getAllTokens()": {
-					"notice": "Returns the list of all created tokens and their liquidity pools"
+					"notice": "Returns the complete list of created tokens"
 				},
 				"getTotalTokensCreated()": {
-					"notice": "Returns the total number of created tokens"
+					"notice": "Returns the total number of tokens created"
+				},
+				"updateCreationCost(uint256)": {
+					"notice": "Updates the cost to create a new token"
+				},
+				"updateDefaultTaxes(uint256,uint256)": {
+					"notice": "Updates the default buy and sell taxes for future pools"
 				},
 				"updatePoolBuyTax(address,uint256)": {
-					"notice": "Updates the buy tax for a specific liquidity pool"
+					"notice": "Updates the buy tax for an existing pool"
 				},
 				"updatePoolSellTax(address,uint256)": {
-					"notice": "Updates the sell tax for a specific liquidity pool"
+					"notice": "Updates the sell tax for an existing pool"
 				}
 			},
 			"version": 1
@@ -561,19 +633,19 @@
 			]
 		},
 		"contracts/token factory/LiquidityPool.sol": {
-			"keccak256": "0x48911d527b2e8755b285b03ba746c9e13ad9f5ef29f2fd84a43a398fdc4e8324",
+			"keccak256": "0x2fc9307a43e1802bc8a3406f4d2245ff010c6ab01b6e7f343586152fef574b3c",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://5140e1b490fd77541bf612cbf91fcb11f25661168a093eecd73f7e584256f98b",
-				"dweb:/ipfs/QmRwBXjaZQqhbchCDQcAA5TZzi4iPEpxTUPU2cUNWB9c3i"
+				"bzz-raw://69adb64322bdf184fe7790be6a515fc07b54aff92fac9dae0f47af149ce61953",
+				"dweb:/ipfs/QmVSnTWVHU9iZK5xe9rkNdSb3DQLhWruCoK6Wv8fmn5KeG"
 			]
 		},
 		"contracts/token factory/tokenfactoryV2.sol": {
-			"keccak256": "0xb3612df8594d6239199564684cc36f2418941ce24cb3566a643d9ccae1e3224c",
+			"keccak256": "0xd86c88e4f7c4eae717f19116babd092a0663b9d8251f32bc762a24eb42d4ff3f",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://37d4fae31f1925f8bebd6e91156fde02720c65f84746045555e5f9ec0c82b53f",
-				"dweb:/ipfs/QmQf5ByWw6zxmFJWo7cvMxD9beidoJ5nUj3NRnNcpnTy6J"
+				"bzz-raw://b3ec1c210568eaa4cd6bd51dd7a96287f2200a30f948ed482ed8f8d90d1a3fed",
+				"dweb:/ipfs/Qma6pqokFvYUsCvKFKivExzdyDvLGStwDoFdLF34xXPuEb"
 			]
 		}
 	},

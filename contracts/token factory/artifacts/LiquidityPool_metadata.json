@@ -43,37 +43,6 @@
 				"anonymous": false,
 				"inputs": [
 					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "buyer",
-						"type": "address"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "etherAmount",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "tokenAmount",
-						"type": "uint256"
-					}
-				],
-				"name": "BuyToken",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "provider",
-						"type": "address"
-					},
-					{
 						"indexed": false,
 						"internalType": "uint256",
 						"name": "amountToken",
@@ -82,49 +51,11 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "amountNative",
+						"name": "amountEther",
 						"type": "uint256"
 					}
 				],
 				"name": "LiquidityAdded",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
-						"internalType": "bool",
-						"name": "enabled",
-						"type": "bool"
-					}
-				],
-				"name": "PenaltiesStatusUpdated",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "trader",
-						"type": "address"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "penaltyAmount",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "newAmountOut",
-						"type": "uint256"
-					}
-				],
-				"name": "PenaltyApplied",
 				"type": "event"
 			},
 			{
@@ -146,23 +77,60 @@
 					{
 						"indexed": true,
 						"internalType": "address",
+						"name": "buyer",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amountInEther",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amountOutTokens",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "buyTax",
+						"type": "uint256"
+					}
+				],
+				"name": "TokensPurchased",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
 						"name": "seller",
 						"type": "address"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "tokenAmount",
+						"name": "amountInTokens",
 						"type": "uint256"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "etherAmount",
+						"name": "amountOutEther",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "sellTax",
 						"type": "uint256"
 					}
 				],
-				"name": "SellToken",
+				"name": "TokensSold",
 				"type": "event"
 			},
 			{
@@ -192,68 +160,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "amountIn",
-						"type": "uint256"
-					}
-				],
-				"name": "calculatePenalty",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "penaltyAmount",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "penaltyPercentage",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "tokenAmount",
-						"type": "uint256"
-					}
-				],
-				"name": "calculatePriceForEther",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "etherAmount",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "etherAmount",
-						"type": "uint256"
-					}
-				],
-				"name": "calculatePriceForTokens",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "tokenAmount",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [],
 				"name": "devAddress",
 				"outputs": [
@@ -261,6 +167,24 @@
 						"internalType": "address",
 						"name": "",
 						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getReserve",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "tokenReserve",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "etherReserve",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -277,37 +201,21 @@
 						"internalType": "uint256",
 						"name": "_initialTokenReserve",
 						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_buyTax",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_sellTax",
+						"type": "uint256"
 					}
 				],
 				"name": "initialize",
 				"outputs": [],
 				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "penaltiesEnabled",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "penaltyThreshold",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -365,19 +273,6 @@
 						"type": "uint256"
 					}
 				],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bool",
-						"name": "enable",
-						"type": "bool"
-					}
-				],
-				"name": "togglePenalties",
-				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
@@ -448,35 +343,7 @@
 		},
 		"userdoc": {
 			"kind": "user",
-			"methods": {
-				"buyToken()": {
-					"notice": "Achat de tokens avec de l'Ether"
-				},
-				"calculatePenalty(uint256)": {
-					"notice": "Calcule la pénalité pour une vente importante"
-				},
-				"calculatePriceForEther(uint256)": {
-					"notice": "Calcule le prix de l'Ether pour un nombre donné de tokens"
-				},
-				"calculatePriceForTokens(uint256)": {
-					"notice": "Calcule le prix des tokens pour un montant donné en Ether"
-				},
-				"initialize(address,uint256)": {
-					"notice": "Initialise la pool avec des réserves et les taxes par défaut"
-				},
-				"sellToken(uint256)": {
-					"notice": "Vente de tokens pour de l'Ether"
-				},
-				"togglePenalties(bool)": {
-					"notice": "Active ou désactive les pénalités"
-				},
-				"updateBuyTax(uint256)": {
-					"notice": "Mise à jour de la taxe d'achat"
-				},
-				"updateSellTax(uint256)": {
-					"notice": "Mise à jour de la taxe de vente"
-				}
-			},
+			"methods": {},
 			"version": 1
 		}
 	},
@@ -513,11 +380,11 @@
 			]
 		},
 		"contracts/token factory/LiquidityPool.sol": {
-			"keccak256": "0x48911d527b2e8755b285b03ba746c9e13ad9f5ef29f2fd84a43a398fdc4e8324",
+			"keccak256": "0xa90ddc2af50ffd7f89e15b35eeb8e5600da81a6b7ab023a56ad08d2259150935",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://5140e1b490fd77541bf612cbf91fcb11f25661168a093eecd73f7e584256f98b",
-				"dweb:/ipfs/QmRwBXjaZQqhbchCDQcAA5TZzi4iPEpxTUPU2cUNWB9c3i"
+				"bzz-raw://1adf3654850b117c7e8cd572e13516bfcc343f4f90207f140d2cc8b401fcda5b",
+				"dweb:/ipfs/QmR5x9ScBLBVGtgP1QcTiKUkJ9AD8amsZgqobxB8opuWyN"
 			]
 		}
 	},
