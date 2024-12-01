@@ -11,24 +11,21 @@ contract TokenFactory is Ownable {
         address liquidityPoolAddress;
     }
 
-    TokenInfo[] public allTokens;
-    mapping(address => address) public tokenToPool; // Mapping pour associer un token à sa pool
-    mapping(string => address) public tokenByName; // Mapping pour rechercher un token par son nom
+    TokenInfo[] public allTokens; // List of all created tokens
+    mapping(address => address) public tokenToPool; // Mapping to associate a token with its liquidity pool
+    mapping(string => address) public tokenByName; // Mapping to search for a token by its name
 
-    uint256 public constant INITIAL_TOKEN_SUPPLY = 21_000_000 * 10 ** 18; // 21 millions de tokens
-    uint256 public constant CREATION_COST = 1 ether; // Coût de création du token
-    uint256 public constant DEV_FEE_PERCENTAGE = 10; // Pourcentage des frais pour les développeurs
-    uint256 public constant DAO_TAX_PERCENTAGE = 3; // Pourcentage pour la DAO
-    uint256 public constant TOKEN_CREATOR_SHARE_PERCENTAGE = 10; // Pourcentage des tokens alloués au créateur
+    address public devAddress; // Developers' address
+    address public daoAddress; // DAO address
 
-    address public devAddress; // Adresse des développeurs pour recevoir les frais
-    address public daoAddress; // Adresse de la DAO pour recevoir la taxe
-
-    bool public distributeToCreator = false; // Désactivé par défaut
+    uint256 public constant DAO_RETRIBUTION_PERCENTAGE = 30; // 3% in thousandths (30/1000)
+    uint256 public constant INITIAL_TOKEN_SUPPLY = 2_100_000_000 * 10 ** 18; // 2.1 billion tokens
+    uint256 public constant CREATION_COST = 1 ether; // Cost to create a token
+    uint256 public constant MAX_TOTAL_TAX = 50; // Maximum 5% in thousandths for buyTax + sellTax
 
     event TokenCreated(address indexed tokenAddress, string name, string symbol, address indexed poolAddress);
-    event PenaltiesStatusUpdated(address indexed poolAddress, bool enabled);
-    event DistributionToCreatorToggled(bool enabled);
+    event BuyTaxUpdated(address indexed poolAddress, uint256 newBuyTax);
+    event SellTaxUpdated(address indexed poolAddress, uint256 newSellTax);
 
     constructor(address _devAddress, address _daoAddress) Ownable(msg.sender) {
         require(_devAddress != address(0), "Dev address cannot be zero address");
@@ -37,42 +34,43 @@ contract TokenFactory is Ownable {
         daoAddress = _daoAddress;
     }
 
+    /// @notice Creates a new token and its associated liquidity pool
+    /// @param name The name of the token
+    /// @param symbol The symbol of the token
     function createToken(string memory name, string memory symbol) external payable returns (address) {
         require(tokenByName[name] == address(0), "Token with this name already exists");
-        require(msg.value == CREATION_COST, "Initial Ether reserve must be exactly 1 Ether");
+        require(msg.value == CREATION_COST, "Must send exactly 1 Ether to create token");
 
-        // Transfert des frais aux développeurs
-        uint256 devFee = (CREATION_COST * DEV_FEE_PERCENTAGE) / 100;
+        // Fee distribution: 10% to developers, the rest to the pool
+        uint256 devFee = (CREATION_COST * 10) / 100;
         uint256 remainingAmount = CREATION_COST - devFee;
 
         (bool devFeeSent, ) = devAddress.call{value: devFee}("");
         require(devFeeSent, "Failed to send dev fee");
 
-        // Création du token
+        // Create the token
         CustomToken newToken = new CustomToken();
         newToken.initialize(name, symbol);
 
-        // Allocation des tokens
-        uint256 daoTax = (INITIAL_TOKEN_SUPPLY * DAO_TAX_PERCENTAGE) / 100;
-        uint256 poolTokenShare = INITIAL_TOKEN_SUPPLY - daoTax;
+        // Token allocation
+        uint256 daoRetribution = (INITIAL_TOKEN_SUPPLY * DAO_RETRIBUTION_PERCENTAGE) / 1000; // 3% to DAO
+        uint256 poolShare = INITIAL_TOKEN_SUPPLY - daoRetribution;
 
-        if (distributeToCreator) {
-            uint256 creatorShare = (INITIAL_TOKEN_SUPPLY * TOKEN_CREATOR_SHARE_PERCENTAGE) / 100;
-            poolTokenShare -= creatorShare;
-            newToken.mint(msg.sender, creatorShare);
-        }
+        newToken.mint(daoAddress, daoRetribution); // Mint tokens for DAO
+        newToken.mint(address(this), poolShare); // Mint remaining tokens to TokenFactory
 
-        newToken.mint(daoAddress, daoTax); // Alloue la taxe directement à la DAO
-        newToken.mint(address(this), poolTokenShare);
-
-        // Création de la pool de liquidité
+        // Create the liquidity pool
         LiquidityPool pool = new LiquidityPool(devAddress, address(this));
-        pool.initialize{value: remainingAmount}(address(newToken), poolTokenShare, 2); // 2% de taxe initiale
-        newToken.transfer(address(pool), poolTokenShare);
-
-        // Stockage des informations
-        address tokenAddress = address(newToken);
         address poolAddress = address(pool);
+
+        // Transfer tokens to the pool
+        newToken.transfer(poolAddress, poolShare);
+
+        // Initialize the pool
+        pool.initialize{value: remainingAmount}(address(newToken), poolShare);
+
+        // Record information
+        address tokenAddress = address(newToken);
 
         allTokens.push(TokenInfo(tokenAddress, poolAddress));
         tokenToPool[tokenAddress] = poolAddress;
@@ -83,27 +81,36 @@ contract TokenFactory is Ownable {
         return tokenAddress;
     }
 
-    // Fonction pour activer/désactiver la distribution des tokens au créateur
-    function toggleDistributionToCreator(bool enable) external onlyOwner {
-        distributeToCreator = enable;
-        emit DistributionToCreatorToggled(enable);
+    /// @notice Updates the buy tax for a specific liquidity pool
+    /// @param poolAddress The address of the liquidity pool
+    /// @param newBuyTax The new buy tax in thousandths
+    function updatePoolBuyTax(address poolAddress, uint256 newBuyTax) external onlyOwner {
+        LiquidityPool pool = LiquidityPool(poolAddress);
+        uint256 totalTax = newBuyTax + pool.sellTax();
+        require(totalTax <= MAX_TOTAL_TAX, "Total tax cannot exceed 5%");
+        pool.updateBuyTax(newBuyTax);
+        emit BuyTaxUpdated(poolAddress, newBuyTax);
     }
 
-    // Fonction pour activer ou désactiver les pénalités pour toutes les pools
-    function togglePenaltiesForAllPools(bool enable) external onlyOwner {
-        for (uint256 i = 0; i < allTokens.length; i++) {
-            address poolAddress = allTokens[i].liquidityPoolAddress;
-            LiquidityPool(poolAddress).togglePenalties(enable);
-            emit PenaltiesStatusUpdated(poolAddress, enable);
-        }
+    /// @notice Updates the sell tax for a specific liquidity pool
+    /// @param poolAddress The address of the liquidity pool
+    /// @param newSellTax The new sell tax in thousandths
+    function updatePoolSellTax(address poolAddress, uint256 newSellTax) external onlyOwner {
+        LiquidityPool pool = LiquidityPool(poolAddress);
+        uint256 totalTax = newSellTax + pool.buyTax();
+        require(totalTax <= MAX_TOTAL_TAX, "Total tax cannot exceed 5%");
+        pool.updateSellTax(newSellTax);
+        emit SellTaxUpdated(poolAddress, newSellTax);
     }
 
-    // Fonction pour obtenir le nombre total de tokens créés
+    /// @notice Returns the total number of created tokens
+    /// @return The total number of created tokens
     function getTotalTokensCreated() external view returns (uint256) {
         return allTokens.length;
     }
 
-    // Fonction pour obtenir la liste complète des tokens
+    /// @notice Returns the list of all created tokens and their liquidity pools
+    /// @return An array of TokenInfo structs containing token and pool addresses
     function getAllTokens() external view returns (TokenInfo[] memory) {
         return allTokens;
     }

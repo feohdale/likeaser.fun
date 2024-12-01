@@ -22,6 +22,49 @@
 				"type": "constructor"
 			},
 			{
+				"inputs": [],
+				"name": "ReentrancyGuardReentrantCall",
+				"type": "error"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newBuyTax",
+						"type": "uint256"
+					}
+				],
+				"name": "BuyTaxUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "buyer",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "etherAmount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "tokenAmount",
+						"type": "uint256"
+					}
+				],
+				"name": "BuyToken",
+				"type": "event"
+			},
+			{
 				"anonymous": false,
 				"inputs": [
 					{
@@ -88,45 +131,52 @@
 				"anonymous": false,
 				"inputs": [
 					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "fromToken",
-						"type": "address"
-					},
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "toToken",
-						"type": "address"
-					},
-					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "amountIn",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "amountOut",
+						"name": "newSellTax",
 						"type": "uint256"
 					}
 				],
-				"name": "Swap",
+				"name": "SellTaxUpdated",
 				"type": "event"
 			},
 			{
 				"anonymous": false,
 				"inputs": [
 					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "seller",
+						"type": "address"
+					},
+					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "newTaxPercentage",
+						"name": "tokenAmount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "etherAmount",
 						"type": "uint256"
 					}
 				],
-				"name": "TaxPercentageUpdated",
+				"name": "SellToken",
 				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "buyTax",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
 			},
 			{
 				"inputs": [],
@@ -166,6 +216,44 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "tokenAmount",
+						"type": "uint256"
+					}
+				],
+				"name": "calculatePriceForEther",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "etherAmount",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "etherAmount",
+						"type": "uint256"
+					}
+				],
+				"name": "calculatePriceForTokens",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "tokenAmount",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "devAddress",
 				"outputs": [
@@ -188,11 +276,6 @@
 					{
 						"internalType": "uint256",
 						"name": "_initialTokenReserve",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_taxPercentage",
 						"type": "uint256"
 					}
 				],
@@ -254,6 +337,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "sellTax",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -270,19 +366,6 @@
 					}
 				],
 				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "taxPercentage",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -328,24 +411,72 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "newTaxPercentage",
+						"name": "newBuyTax",
 						"type": "uint256"
 					}
 				],
-				"name": "updateTaxPercentage",
+				"name": "updateBuyTax",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "newSellTax",
+						"type": "uint256"
+					}
+				],
+				"name": "updateSellTax",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			}
 		],
 		"devdoc": {
+			"errors": {
+				"ReentrancyGuardReentrantCall()": [
+					{
+						"details": "Unauthorized reentrant call."
+					}
+				]
+			},
 			"kind": "dev",
 			"methods": {},
 			"version": 1
 		},
 		"userdoc": {
 			"kind": "user",
-			"methods": {},
+			"methods": {
+				"buyToken()": {
+					"notice": "Achat de tokens avec de l'Ether"
+				},
+				"calculatePenalty(uint256)": {
+					"notice": "Calcule la pénalité pour une vente importante"
+				},
+				"calculatePriceForEther(uint256)": {
+					"notice": "Calcule le prix de l'Ether pour un nombre donné de tokens"
+				},
+				"calculatePriceForTokens(uint256)": {
+					"notice": "Calcule le prix des tokens pour un montant donné en Ether"
+				},
+				"initialize(address,uint256)": {
+					"notice": "Initialise la pool avec des réserves et les taxes par défaut"
+				},
+				"sellToken(uint256)": {
+					"notice": "Vente de tokens pour de l'Ether"
+				},
+				"togglePenalties(bool)": {
+					"notice": "Active ou désactive les pénalités"
+				},
+				"updateBuyTax(uint256)": {
+					"notice": "Mise à jour de la taxe d'achat"
+				},
+				"updateSellTax(uint256)": {
+					"notice": "Mise à jour de la taxe de vente"
+				}
+			},
 			"version": 1
 		}
 	},
@@ -353,26 +484,18 @@
 		"compilationTarget": {
 			"contracts/token factory/LiquidityPool.sol": "LiquidityPool"
 		},
-		"evmVersion": "cancun",
+		"evmVersion": "paris",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": false,
+			"enabled": true,
 			"runs": 200
 		},
 		"remappings": []
 	},
 	"sources": {
-		"@openzeppelin/contracts/security/ReentrancyGuard.sol": {
-			"keccak256": "0xa535a5df777d44e945dd24aa43a11e44b024140fc340ad0dfe42acf4002aade1",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://41319e7f621f2dc3733511332c4fd032f8e32ad2aa7fd6f665c19741d9941a34",
-				"dweb:/ipfs/QmcYR3bd862GD1Bc7jwrU9bGxrhUu5na1oP964bDCu2id1"
-			]
-		},
 		"@openzeppelin/contracts/token/ERC20/IERC20.sol": {
 			"keccak256": "0x4ce6e9f30dba5ae30f26321dc851b669caf3f953f8c832304d05df2a523f1af3",
 			"license": "MIT",
@@ -381,12 +504,20 @@
 				"dweb:/ipfs/QmYgnFHamrgy5qurrxVLR1qDb7MirvGEoxCVwqiF1YvDMf"
 			]
 		},
-		"contracts/token factory/LiquidityPool.sol": {
-			"keccak256": "0xc975577a23c037b69311cdd4c1097d0ddada68495f62cd09ef3fed1330857aad",
+		"@openzeppelin/contracts/utils/ReentrancyGuard.sol": {
+			"keccak256": "0x11a5a79827df29e915a12740caf62fe21ebe27c08c9ae3e09abe9ee3ba3866d3",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://7e6e3a64e36a89edf442f72d71e080f78f6f76bf74ce8f1bc4032b9b2b3cf92f",
-				"dweb:/ipfs/QmYEyssKmyDYcYih3QqMMK99Tatit6VV3WngwYActo69Rv"
+				"bzz-raw://3cf0c69ab827e3251db9ee6a50647d62c90ba580a4d7bbff21f2bea39e7b2f4a",
+				"dweb:/ipfs/QmZiKwtKU1SBX4RGfQtY7PZfiapbbu6SZ9vizGQD9UHjRA"
+			]
+		},
+		"contracts/token factory/LiquidityPool.sol": {
+			"keccak256": "0x48911d527b2e8755b285b03ba746c9e13ad9f5ef29f2fd84a43a398fdc4e8324",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://5140e1b490fd77541bf612cbf91fcb11f25661168a093eecd73f7e584256f98b",
+				"dweb:/ipfs/QmRwBXjaZQqhbchCDQcAA5TZzi4iPEpxTUPU2cUNWB9c3i"
 			]
 		}
 	},
