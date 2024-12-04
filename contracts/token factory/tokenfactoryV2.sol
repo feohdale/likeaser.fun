@@ -17,6 +17,7 @@ contract TokenFactory is Ownable {
 
     address public devAddress; // Developers' address
     address public daoAddress; // DAO address
+    address public algebraPoolInitializer; // Address of the Algebra Pool Initializer
 
     uint256 public constant DAO_RETRIBUTION_PERCENTAGE = 30; // 3% in thousandths (30/1000)
     uint256 public constant INITIAL_TOKEN_SUPPLY = 2_100_000_000 * 10 ** 18; // 2.1 billion tokens
@@ -25,18 +26,25 @@ contract TokenFactory is Ownable {
 
     uint256 public defaultBuyTax = 0; // Default buy tax for new pools (in thousandths)
     uint256 public defaultSellTax = 10; // Default sell tax for new pools (in thousandths)
+    uint256 public defaultMigrationThreshold = 0.2 ether; // Default migration threshold
 
     event TokenCreated(address indexed tokenAddress, string name, string symbol, address indexed poolAddress);
     event DefaultTaxesUpdated(uint256 newBuyTax, uint256 newSellTax);
     event PoolBuyTaxUpdated(address indexed poolAddress, uint256 newBuyTax);
     event PoolSellTaxUpdated(address indexed poolAddress, uint256 newSellTax);
     event CreationCostUpdated(uint256 newCost);
+    event MigrationThresholdUpdated(address indexed poolAddress, uint256 newThreshold);
+    event AlgebraInitializerUpdated(address indexed newInitializer);
+    event MigrationToggled(address indexed poolAddress, bool enabled);
 
-    constructor(address _devAddress, address _daoAddress) Ownable(msg.sender) {
+    constructor(address _devAddress, address _daoAddress, address _algebraInitializer) Ownable(msg.sender) {
         require(_devAddress != address(0), "Dev address cannot be zero address");
         require(_daoAddress != address(0), "DAO address cannot be zero address");
+        require(_algebraInitializer != address(0), "Algebra initializer cannot be zero address");
+
         devAddress = _devAddress;
         daoAddress = _daoAddress;
+        algebraPoolInitializer = _algebraInitializer;
     }
 
     /// @notice Creates a new token and its associated liquidity pool
@@ -59,7 +67,7 @@ contract TokenFactory is Ownable {
         newToken.mint(daoAddress, daoRetribution);
         newToken.mint(address(this), poolShare);
 
-        LiquidityPool pool = new LiquidityPool(devAddress, address(this));
+        LiquidityPool pool = new LiquidityPool(devAddress, address(this), defaultMigrationThreshold);
         address poolAddress = address(pool);
 
         newToken.transfer(poolAddress, poolShare);
@@ -103,11 +111,31 @@ contract TokenFactory is Ownable {
     }
 
     /// @notice Updates the cost to create a new token
-    /// @param newCost The new creation cost in wei
     function updateCreationCost(uint256 newCost) external onlyOwner {
         require(newCost > 0, "Creation cost must be greater than zero");
         creationCost = newCost;
         emit CreationCostUpdated(newCost);
+    }
+
+    /// @notice Updates the migration threshold for a specific pool
+    function updatePoolMigrationThreshold(address poolAddress, uint256 newThreshold) external onlyOwner {
+        LiquidityPool pool = LiquidityPool(poolAddress);
+        pool.updateMigrationThreshold(newThreshold);
+        emit MigrationThresholdUpdated(poolAddress, newThreshold);
+    }
+
+    /// @notice Updates the Algebra Pool Initializer address
+    function updateAlgebraInitializer(address newInitializer) external onlyOwner {
+        require(newInitializer != address(0), "Initializer cannot be zero address");
+        algebraPoolInitializer = newInitializer;
+        emit AlgebraInitializerUpdated(newInitializer);
+    }
+
+    /// @notice Toggles the auto-migration feature for a specific pool
+    function togglePoolMigration(address poolAddress, bool enable) external onlyOwner {
+        LiquidityPool pool = LiquidityPool(poolAddress);
+        pool.toggleAutoMigration(enable);
+        emit MigrationToggled(poolAddress, enable);
     }
 
     /// @notice Returns the total number of tokens created

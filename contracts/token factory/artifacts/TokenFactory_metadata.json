@@ -16,6 +16,11 @@
 						"internalType": "address",
 						"name": "_daoAddress",
 						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_algebraInitializer",
+						"type": "address"
 					}
 				],
 				"stateMutability": "nonpayable",
@@ -47,6 +52,19 @@
 				"anonymous": false,
 				"inputs": [
 					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "newInitializer",
+						"type": "address"
+					}
+				],
+				"name": "AlgebraInitializerUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
 						"indexed": false,
 						"internalType": "uint256",
 						"name": "newCost",
@@ -73,6 +91,44 @@
 					}
 				],
 				"name": "DefaultTaxesUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "poolAddress",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newThreshold",
+						"type": "uint256"
+					}
+				],
+				"name": "MigrationThresholdUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "poolAddress",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "enabled",
+						"type": "bool"
+					}
+				],
+				"name": "MigrationToggled",
 				"type": "event"
 			},
 			{
@@ -203,6 +259,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "algebraPoolInitializer",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -279,6 +348,19 @@
 			{
 				"inputs": [],
 				"name": "defaultBuyTax",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "defaultMigrationThreshold",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -376,6 +458,24 @@
 			{
 				"inputs": [
 					{
+						"internalType": "address",
+						"name": "poolAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "enable",
+						"type": "bool"
+					}
+				],
+				"name": "togglePoolMigration",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "string",
 						"name": "",
 						"type": "string"
@@ -420,6 +520,19 @@
 					}
 				],
 				"name": "transferOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "newInitializer",
+						"type": "address"
+					}
+				],
+				"name": "updateAlgebraInitializer",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -482,6 +595,24 @@
 					},
 					{
 						"internalType": "uint256",
+						"name": "newThreshold",
+						"type": "uint256"
+					}
+				],
+				"name": "updatePoolMigrationThreshold",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "poolAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
 						"name": "newSellTax",
 						"type": "uint256"
 					}
@@ -515,11 +646,6 @@
 				},
 				"transferOwnership(address)": {
 					"details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
-				},
-				"updateCreationCost(uint256)": {
-					"params": {
-						"newCost": "The new creation cost in wei"
-					}
 				}
 			},
 			"version": 1
@@ -536,6 +662,12 @@
 				"getTotalTokensCreated()": {
 					"notice": "Returns the total number of tokens created"
 				},
+				"togglePoolMigration(address,bool)": {
+					"notice": "Toggles the auto-migration feature for a specific pool"
+				},
+				"updateAlgebraInitializer(address)": {
+					"notice": "Updates the Algebra Pool Initializer address"
+				},
 				"updateCreationCost(uint256)": {
 					"notice": "Updates the cost to create a new token"
 				},
@@ -544,6 +676,9 @@
 				},
 				"updatePoolBuyTax(address,uint256)": {
 					"notice": "Updates the buy tax for an existing pool"
+				},
+				"updatePoolMigrationThreshold(address,uint256)": {
+					"notice": "Updates the migration threshold for a specific pool"
 				},
 				"updatePoolSellTax(address,uint256)": {
 					"notice": "Updates the sell tax for an existing pool"
@@ -556,7 +691,7 @@
 		"compilationTarget": {
 			"contracts/token factory/tokenfactoryV2.sol": "TokenFactory"
 		},
-		"evmVersion": "paris",
+		"evmVersion": "cancun",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"
@@ -633,19 +768,19 @@
 			]
 		},
 		"contracts/token factory/LiquidityPool.sol": {
-			"keccak256": "0xa90ddc2af50ffd7f89e15b35eeb8e5600da81a6b7ab023a56ad08d2259150935",
+			"keccak256": "0xcf47dee7540612854a88ec646e1e9945c115bd9c45b09d428ba6b2c03bf674ad",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://1adf3654850b117c7e8cd572e13516bfcc343f4f90207f140d2cc8b401fcda5b",
-				"dweb:/ipfs/QmR5x9ScBLBVGtgP1QcTiKUkJ9AD8amsZgqobxB8opuWyN"
+				"bzz-raw://a650356d36ae692371ddd1cd8781e7483aac27855f9840087f78caf7f488cfc0",
+				"dweb:/ipfs/QmbwaY6PmFZRvZCPGXwpN8QTnRgpTGF8hvNVQZGgon9syj"
 			]
 		},
 		"contracts/token factory/tokenfactoryV2.sol": {
-			"keccak256": "0xabeb266138b9baa2f92fc5f589777a1f04c8eec2e53f0291ed6216ec4248fd08",
+			"keccak256": "0xdd47a2bf44e54b1907570a89d011a7be37c6ed02c8c9cdf23f4ca454aecdc8c9",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://43814fc2110b203727340281caa118cb4e97ed338d1d087d397115b57024c420",
-				"dweb:/ipfs/QmX6GS9RmH526AkMgSAuzQmHGefu5szQyVoj8NMKiEK8B7"
+				"bzz-raw://a1bed2e092fe5e7a62ed83b87181a03df181a61e30a5ca99961b4f4da65c3086",
+				"dweb:/ipfs/QmWJ55e2ZTXzYy77XZb1d4A1cf398ygdWhdWnybhyQCpxg"
 			]
 		}
 	},

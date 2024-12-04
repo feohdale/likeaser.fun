@@ -16,6 +16,11 @@
 						"internalType": "address",
 						"name": "_tokenFactory",
 						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_initialMigrationThreshold",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "nonpayable",
@@ -30,13 +35,13 @@
 				"anonymous": false,
 				"inputs": [
 					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "newBuyTax",
-						"type": "uint256"
+						"indexed": true,
+						"internalType": "address",
+						"name": "newInitializer",
+						"type": "address"
 					}
 				],
-				"name": "BuyTaxUpdated",
+				"name": "AlgebraPoolInitializerUpdated",
 				"type": "event"
 			},
 			{
@@ -44,14 +49,33 @@
 				"inputs": [
 					{
 						"indexed": false,
+						"internalType": "bool",
+						"name": "enabled",
+						"type": "bool"
+					}
+				],
+				"name": "AutoMigrationToggled",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "provider",
+						"type": "address"
+					},
+					{
+						"indexed": false,
 						"internalType": "uint256",
-						"name": "amountToken",
+						"name": "tokenAmount",
 						"type": "uint256"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "amountEther",
+						"name": "nativeAmount",
 						"type": "uint256"
 					}
 				],
@@ -64,74 +88,113 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
+						"name": "newThreshold",
+						"type": "uint256"
+					}
+				],
+				"name": "MigrationThresholdUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "newPoolAddress",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "tokenTransferred",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "etherTransferred",
+						"type": "uint256"
+					}
+				],
+				"name": "MigrationToAlgebra",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "fromToken",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "toToken",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amountIn",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amountOut",
+						"type": "uint256"
+					}
+				],
+				"name": "Swap",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newBuyTax",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
 						"name": "newSellTax",
 						"type": "uint256"
 					}
 				],
-				"name": "SellTaxUpdated",
+				"name": "TaxUpdated",
 				"type": "event"
 			},
 			{
-				"anonymous": false,
-				"inputs": [
+				"inputs": [],
+				"name": "algebraPoolInitializer",
+				"outputs": [
 					{
-						"indexed": true,
 						"internalType": "address",
-						"name": "buyer",
+						"name": "",
 						"type": "address"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "amountInEther",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "amountOutTokens",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "buyTax",
-						"type": "uint256"
 					}
 				],
-				"name": "TokensPurchased",
-				"type": "event"
+				"stateMutability": "view",
+				"type": "function"
 			},
 			{
-				"anonymous": false,
-				"inputs": [
+				"inputs": [],
+				"name": "autoMigrationEnabled",
+				"outputs": [
 					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "seller",
-						"type": "address"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "amountInTokens",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "amountOutEther",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "sellTax",
-						"type": "uint256"
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
 					}
 				],
-				"name": "TokensSold",
-				"type": "event"
+				"stateMutability": "view",
+				"type": "function"
 			},
 			{
 				"inputs": [],
@@ -174,16 +237,16 @@
 			},
 			{
 				"inputs": [],
-				"name": "getReserve",
+				"name": "getReserves",
 				"outputs": [
 					{
 						"internalType": "uint256",
-						"name": "tokenReserve",
+						"name": "",
 						"type": "uint256"
 					},
 					{
 						"internalType": "uint256",
-						"name": "etherReserve",
+						"name": "",
 						"type": "uint256"
 					}
 				],
@@ -216,6 +279,32 @@
 				"name": "initialize",
 				"outputs": [],
 				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "migratedToAlgebra",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "migrationThreshold",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -277,6 +366,32 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_initializer",
+						"type": "address"
+					}
+				],
+				"name": "setAlgebraPoolInitializer",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bool",
+						"name": "enable",
+						"type": "bool"
+					}
+				],
+				"name": "toggleAutoMigration",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "token0",
 				"outputs": [
@@ -319,6 +434,19 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
+						"name": "newThreshold",
+						"type": "uint256"
+					}
+				],
+				"name": "updateMigrationThreshold",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
 						"name": "newSellTax",
 						"type": "uint256"
 					}
@@ -351,13 +479,13 @@
 		"compilationTarget": {
 			"contracts/token factory/LiquidityPool.sol": "LiquidityPool"
 		},
-		"evmVersion": "paris",
+		"evmVersion": "cancun",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": true,
+			"enabled": false,
 			"runs": 200
 		},
 		"remappings": []
@@ -380,11 +508,11 @@
 			]
 		},
 		"contracts/token factory/LiquidityPool.sol": {
-			"keccak256": "0xa90ddc2af50ffd7f89e15b35eeb8e5600da81a6b7ab023a56ad08d2259150935",
+			"keccak256": "0xcf47dee7540612854a88ec646e1e9945c115bd9c45b09d428ba6b2c03bf674ad",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://1adf3654850b117c7e8cd572e13516bfcc343f4f90207f140d2cc8b401fcda5b",
-				"dweb:/ipfs/QmR5x9ScBLBVGtgP1QcTiKUkJ9AD8amsZgqobxB8opuWyN"
+				"bzz-raw://a650356d36ae692371ddd1cd8781e7483aac27855f9840087f78caf7f488cfc0",
+				"dweb:/ipfs/QmbwaY6PmFZRvZCPGXwpN8QTnRgpTGF8hvNVQZGgon9syj"
 			]
 		}
 	},
