@@ -1,10 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract LiquidityPool is ReentrancyGuard {
+    uint256 public constant X_DELTA_LOWER = 257627658726967931872702964;
+    uint256 public constant X_DELTA_UPPER = 257627658726993462773682809;
+    uint256 public constant Y_DELTA_LOWER = 31864892854290958;
+    uint256 public constant Y_DELTA_UPPER = 31864892854294116;
+
     address public token0; // ERC20 token address
     address public tokenFactory; // TokenFactory address
     address public devAddress; // Developer address
@@ -17,8 +22,9 @@ contract LiquidityPool is ReentrancyGuard {
     bool public autoMigrationEnabled; // Whether auto-migration is enabled
     uint256 public migrationThreshold; // Threshold to trigger migration
 
-    event Swap(address indexed fromToken, address indexed toToken, uint256 amountIn, uint256 amountOut);
-    event LiquidityAdded(address indexed provider, uint256 tokenAmount, uint256 nativeAmount);
+    event TokensPurchased(address indexed buyer, uint256 amountIn, uint256 amountOut, uint256 tax);
+    event TokensSold(address indexed seller, uint256 amountIn, uint256 amountOut, uint256 tax);
+    event LiquidityAdded(address indexed provider, uint256 tokenAmount);
     event TaxUpdated(uint256 newBuyTax, uint256 newSellTax);
     event MigrationToAlgebra(address indexed newPoolAddress, uint256 tokenTransferred, uint256 etherTransferred);
     event AlgebraPoolInitializerUpdated(address indexed newInitializer);
@@ -46,15 +52,13 @@ contract LiquidityPool is ReentrancyGuard {
         uint256 _sellTax
     ) external payable onlyFactory nonReentrant {
         require(token0 == address(0), "Pool already initialized");
-        require(msg.value > 0, "Initial native currency reserve required");
 
         token0 = _token0;
         reserve0 = _initialTokenReserve;
-        reserve1 = msg.value;
         buyTax = _buyTax;
         sellTax = _sellTax;
 
-        emit LiquidityAdded(msg.sender, _initialTokenReserve, msg.value);
+        emit LiquidityAdded(msg.sender, _initialTokenReserve);
     }
 
     function setAlgebraPoolInitializer(address _initializer) external onlyFactory {
@@ -96,55 +100,83 @@ contract LiquidityPool is ReentrancyGuard {
         emit MigrationToAlgebra(newPoolAddress, reserve0, reserve1);
     }
 
-    function buyToken() external payable nonReentrant returns (uint256 amountOut) {
+    function buyToken()
+        external
+        payable
+        nonReentrant
+        returns (uint256 amountOut)
+    {
         require(!migratedToAlgebra, "Pool migrated to Algebra");
         require(msg.value > 0, "Must send Ether to buy tokens");
+        require(reserve1 < 0.2 ether, "Pool is full");
+        require(reserve0 > 0, "No tokens in the pool");
 
         uint256 tax = (msg.value * buyTax) / 1000;
         uint256 amountInAfterTax = msg.value - tax;
 
-        (bool taxSent, ) = devAddress.call{value: tax}("");
-        require(taxSent, "Failed to send tax to dev address");
+        if (reserve1 + amountInAfterTax >= 0.2 ether) {
+            uint256 etherToUse = 0.2 ether - reserve1;
+            uint256 refund = amountInAfterTax - etherToUse;
 
-        uint256 newReserve1 = reserve1 + amountInAfterTax;
-        amountOut = reserve0 - (reserve0 * reserve1) / newReserve1;
+            reserve1 += etherToUse;
+            amountOut = reserve0;
+            reserve0 = 0;
 
-        reserve1 = newReserve1;
-        reserve0 -= amountOut;
+            if (refund > 0) {
+                (bool refundSent, ) = msg.sender.call{value: refund}("");
+                require(refundSent, "Failed to refund excess ether");
+            }
+        } else {
+            uint256 newReserve1 = reserve1 + amountInAfterTax;
+            uint256 quotient = ((reserve0 + X_DELTA_UPPER) *
+                (reserve1 + Y_DELTA_UPPER)) / (newReserve1 + Y_DELTA_LOWER);
+            if (quotient < X_DELTA_LOWER) {
+                quotient = X_DELTA_LOWER;
+            }
+            uint256 newReserve0 = quotient - X_DELTA_LOWER;
+            amountOut = newReserve0 > reserve0 ? reserve0 : reserve0 - newReserve0;
 
-        IERC20(token0).transfer(msg.sender, amountOut);
-
-        emit Swap(address(0), token0, msg.value, amountOut);
-
-        if (autoMigrationEnabled && reserve1 >= migrationThreshold) {
-            migrateToAlgebra();
+            reserve1 = newReserve1;
+            reserve0 -= amountOut;
         }
+
+        require(IERC20(token0).transfer(msg.sender, amountOut), "Failed to transfer tokens");
+
+        (bool taxSent, ) = devAddress.call{value: tax}("");
+        require(taxSent, "Failed to send buy tax");
+        emit TokensPurchased(msg.sender, msg.value, amountOut, tax);
     }
 
-    function sellToken(uint256 amountIn) external nonReentrant returns (uint256 amountOut) {
-        require(!migratedToAlgebra, "Pool migrated to Algebra");
+    function sellToken(
+        uint256 amountIn
+    ) external nonReentrant returns (uint256 amountOut) {
         require(amountIn > 0, "Must sell some tokens");
 
-        uint256 tax = (amountIn * sellTax) / 1000;
-        uint256 amountInAfterTax = amountIn - tax;
-
-        IERC20(token0).transferFrom(msg.sender, address(this), amountIn);
-        IERC20(token0).transfer(devAddress, tax);
-
-        uint256 newReserve0 = reserve0 + amountInAfterTax;
-        amountOut = reserve1 - (reserve0 * reserve1) / newReserve0;
+        uint256 newReserve0 = reserve0 + amountIn;
+        uint256 quotient = ((reserve0 + X_DELTA_UPPER) * (reserve1 + Y_DELTA_UPPER)) / 
+            (newReserve0 + X_DELTA_UPPER);
+        if (quotient < Y_DELTA_UPPER) {
+            quotient = Y_DELTA_UPPER;
+        }
+        uint256 newReserve1 = quotient - Y_DELTA_UPPER;
+        amountOut = newReserve1 > reserve1 ? reserve1 : reserve1 - newReserve1;
 
         reserve0 = newReserve0;
         reserve1 -= amountOut;
+        
+        // Send sell tax to the developer address
+        uint256 etherTax = (amountOut * sellTax) / 1000;
+        amountOut -= etherTax;
 
+        (bool taxSent, ) = devAddress.call{value: etherTax}("");
+        require(taxSent, "Failed to send sell tax");
+
+
+        require(IERC20(token0).transferFrom(msg.sender, address(this), amountIn), "Failed to transfer tokens"   );
         (bool success, ) = msg.sender.call{value: amountOut}("");
-        require(success, "Ether transfer failed");
+        require(success, "Failed to send ether");
 
-        emit Swap(token0, address(0), amountIn, amountOut);
-
-        if (autoMigrationEnabled && reserve1 >= migrationThreshold) {
-            migrateToAlgebra();
-        }
+        emit TokensSold(msg.sender, amountIn, amountOut, sellTax);
     }
 
     function getReserves() external view returns (uint256, uint256) {

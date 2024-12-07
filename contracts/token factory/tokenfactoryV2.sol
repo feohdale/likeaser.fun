@@ -52,17 +52,14 @@ contract TokenFactory is Ownable {
         require(tokenByName[name] == address(0), "Token with this name already exists");
         require(msg.value == creationCost, "Incorrect Ether value for creation cost");
 
-        uint256 devFee = (creationCost * 10) / 100;
-        uint256 remainingAmount = creationCost - devFee;
-
-        (bool devFeeSent, ) = devAddress.call{value: devFee}("");
+        (bool devFeeSent, ) = devAddress.call{value: creationCost}("");
         require(devFeeSent, "Failed to send dev fee");
 
         CustomToken newToken = new CustomToken();
         newToken.initialize(name, symbol);
 
         uint256 daoRetribution = (INITIAL_TOKEN_SUPPLY * DAO_RETRIBUTION_PERCENTAGE) / 1000;
-        uint256 poolShare = INITIAL_TOKEN_SUPPLY - daoRetribution;
+        uint256 poolShare = (INITIAL_TOKEN_SUPPLY * 80) / 100 - daoRetribution;
 
         newToken.mint(daoAddress, daoRetribution);
         newToken.mint(address(this), poolShare);
@@ -72,7 +69,7 @@ contract TokenFactory is Ownable {
 
         newToken.transfer(poolAddress, poolShare);
 
-        pool.initialize{value: remainingAmount}(address(newToken), poolShare, defaultBuyTax, defaultSellTax);
+        pool.initialize(address(newToken), poolShare, defaultBuyTax, defaultSellTax);
 
         address tokenAddress = address(newToken);
         allTokens.push(TokenInfo(tokenAddress, poolAddress));
