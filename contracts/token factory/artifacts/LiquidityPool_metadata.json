@@ -71,12 +71,6 @@
 						"internalType": "uint256",
 						"name": "tokenAmount",
 						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "nativeAmount",
-						"type": "uint256"
 					}
 				],
 				"name": "LiquidityAdded",
@@ -124,31 +118,25 @@
 				"anonymous": false,
 				"inputs": [
 					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "step",
+						"type": "string"
+					},
+					{
 						"indexed": true,
 						"internalType": "address",
-						"name": "fromToken",
+						"name": "dataAddress",
 						"type": "address"
 					},
 					{
 						"indexed": true,
-						"internalType": "address",
-						"name": "toToken",
-						"type": "address"
-					},
-					{
-						"indexed": false,
 						"internalType": "uint256",
-						"name": "amountIn",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "amountOut",
+						"name": "value",
 						"type": "uint256"
 					}
 				],
-				"name": "Swap",
+				"name": "Step",
 				"type": "event"
 			},
 			{
@@ -169,6 +157,120 @@
 				],
 				"name": "TaxUpdated",
 				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "buyer",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amountIn",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amountOut",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "tax",
+						"type": "uint256"
+					}
+				],
+				"name": "TokensPurchased",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "seller",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amountIn",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amountOut",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "tax",
+						"type": "uint256"
+					}
+				],
+				"name": "TokensSold",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "X_DELTA_LOWER",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "X_DELTA_UPPER",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "Y_DELTA_LOWER",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "Y_DELTA_UPPER",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
 			},
 			{
 				"inputs": [],
@@ -223,6 +325,30 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "amount0",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount1",
+						"type": "uint256"
+					}
+				],
+				"name": "calculateSqrtPriceX96",
+				"outputs": [
+					{
+						"internalType": "uint160",
+						"name": "",
+						"type": "uint160"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "devAddress",
 				"outputs": [
@@ -233,6 +359,13 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "forceMigration",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -274,6 +407,16 @@
 						"internalType": "uint256",
 						"name": "_sellTax",
 						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "_algebraPoolInitializer",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "_automigration",
+						"type": "bool"
 					}
 				],
 				"name": "initialize",
@@ -479,13 +622,13 @@
 		"compilationTarget": {
 			"contracts/token factory/LiquidityPool.sol": "LiquidityPool"
 		},
-		"evmVersion": "cancun",
+		"evmVersion": "paris",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": false,
+			"enabled": true,
 			"runs": 200
 		},
 		"remappings": []
@@ -508,11 +651,11 @@
 			]
 		},
 		"contracts/token factory/LiquidityPool.sol": {
-			"keccak256": "0xcf47dee7540612854a88ec646e1e9945c115bd9c45b09d428ba6b2c03bf674ad",
+			"keccak256": "0x1f1f24914b07f0fb93b95de01a172746af40eaede63be529b3cfc922283d7fa6",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://a650356d36ae692371ddd1cd8781e7483aac27855f9840087f78caf7f488cfc0",
-				"dweb:/ipfs/QmbwaY6PmFZRvZCPGXwpN8QTnRgpTGF8hvNVQZGgon9syj"
+				"bzz-raw://ab878e3cd3c422564b4aa5d58a7c456f87b7c6dcddcf35a81031c01437b3333f",
+				"dweb:/ipfs/QmNaZtDQaCmG9CKdvRi2mZ3dVo2cM5dE85oWV9ps72BvWG"
 			]
 		}
 	},

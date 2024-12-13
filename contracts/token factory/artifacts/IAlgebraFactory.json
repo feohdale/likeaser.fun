@@ -1,0 +1,96 @@
+{
+	"deploy": {
+		"VM:-": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"main:1": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"ropsten:3": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"rinkeby:4": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"kovan:42": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"goerli:5": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"Custom": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		}
+	},
+	"data": {
+		"bytecode": {
+			"functionDebugData": {},
+			"generatedSources": [],
+			"linkReferences": {},
+			"object": "",
+			"opcodes": "",
+			"sourceMap": ""
+		},
+		"deployedBytecode": {
+			"functionDebugData": {},
+			"generatedSources": [],
+			"immutableReferences": {},
+			"linkReferences": {},
+			"object": "",
+			"opcodes": "",
+			"sourceMap": ""
+		},
+		"gasEstimates": null,
+		"methodIdentifiers": {
+			"createAndInitializePoolIfNecessary(address,address,address,uint160,uint256)": "c00d4215"
+		}
+	},
+	"abi": [
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "token0",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "token1",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "deployer",
+					"type": "address"
+				},
+				{
+					"internalType": "uint160",
+					"name": "sqrtPriceX96",
+					"type": "uint160"
+				},
+				{
+					"internalType": "uint256",
+					"name": "sendNativeTRBTC",
+					"type": "uint256"
+				}
+			],
+			"name": "createAndInitializePoolIfNecessary",
+			"outputs": [
+				{
+					"internalType": "address",
+					"name": "pool",
+					"type": "address"
+				}
+			],
+			"stateMutability": "payable",
+			"type": "function"
+		}
+	]
+}

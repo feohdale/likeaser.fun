@@ -27,6 +27,8 @@ contract TokenFactory is Ownable {
     uint256 public defaultBuyTax = 0; // Default buy tax for new pools (in thousandths)
     uint256 public defaultSellTax = 10; // Default sell tax for new pools (in thousandths)
     uint256 public defaultMigrationThreshold = 0.2 ether; // Default migration threshold
+    bool autoMigration = true; 
+
 
     event TokenCreated(address indexed tokenAddress, string name, string symbol, address indexed poolAddress);
     event DefaultTaxesUpdated(uint256 newBuyTax, uint256 newSellTax);
@@ -36,6 +38,7 @@ contract TokenFactory is Ownable {
     event MigrationThresholdUpdated(address indexed poolAddress, uint256 newThreshold);
     event AlgebraInitializerUpdated(address indexed newInitializer);
     event MigrationToggled(address indexed poolAddress, bool enabled);
+    event GlobalAutoMigrationToggled(bool enabled);
 
     constructor(address _devAddress, address _daoAddress, address _algebraInitializer) Ownable(msg.sender) {
         require(_devAddress != address(0), "Dev address cannot be zero address");
@@ -52,14 +55,17 @@ contract TokenFactory is Ownable {
         require(tokenByName[name] == address(0), "Token with this name already exists");
         require(msg.value == creationCost, "Incorrect Ether value for creation cost");
 
-        (bool devFeeSent, ) = devAddress.call{value: creationCost}("");
+        uint256 devFee = (creationCost * 10) / 100;
+        uint256 remainingAmount = creationCost - devFee;
+
+        (bool devFeeSent, ) = devAddress.call{value: devFee}("");
         require(devFeeSent, "Failed to send dev fee");
 
         CustomToken newToken = new CustomToken();
         newToken.initialize(name, symbol);
 
         uint256 daoRetribution = (INITIAL_TOKEN_SUPPLY * DAO_RETRIBUTION_PERCENTAGE) / 1000;
-        uint256 poolShare = (INITIAL_TOKEN_SUPPLY * 80) / 100 - daoRetribution;
+        uint256 poolShare = INITIAL_TOKEN_SUPPLY - daoRetribution;
 
         newToken.mint(daoAddress, daoRetribution);
         newToken.mint(address(this), poolShare);
@@ -69,7 +75,7 @@ contract TokenFactory is Ownable {
 
         newToken.transfer(poolAddress, poolShare);
 
-        pool.initialize(address(newToken), poolShare, defaultBuyTax, defaultSellTax);
+        pool.initialize{value: remainingAmount}(address(newToken), poolShare, defaultBuyTax, defaultSellTax, algebraPoolInitializer, autoMigration);
 
         address tokenAddress = address(newToken);
         allTokens.push(TokenInfo(tokenAddress, poolAddress));
@@ -143,5 +149,20 @@ contract TokenFactory is Ownable {
     /// @notice Returns the complete list of created tokens
     function getAllTokens() external view returns (TokenInfo[] memory) {
         return allTokens;
+    }
+
+
+
+    function toggleGlobalAutoMigration(bool enable) external onlyOwner {
+        // Iterate over all pools and toggle auto-migration
+        for (uint256 i = 0; i < allTokens.length; i++) {
+            address poolAddress = allTokens[i].liquidityPoolAddress;
+            LiquidityPool(poolAddress).toggleAutoMigration(enable);
+        }
+        emit GlobalAutoMigrationToggled(enable);
+    }
+    function toggleAutoMigrationAtCreation() external onlyOwner {
+        autoMigration = !autoMigration; 
+        
     }
 }

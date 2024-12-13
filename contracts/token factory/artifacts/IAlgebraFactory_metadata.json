@@ -1,0 +1,86 @@
+{
+	"compiler": {
+		"version": "0.8.26+commit.8a97fa7a"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "token0",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "token1",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "deployer",
+						"type": "address"
+					},
+					{
+						"internalType": "uint160",
+						"name": "sqrtPriceX96",
+						"type": "uint160"
+					},
+					{
+						"internalType": "uint256",
+						"name": "sendNativeTRBTC",
+						"type": "uint256"
+					}
+				],
+				"name": "createAndInitializePoolIfNecessary",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "pool",
+						"type": "address"
+					}
+				],
+				"stateMutability": "payable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"title": "Interface d'Algebra (version avec paramètre sendNativeTRBTC)",
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/token factory/testAlgebrav2.sol": "IAlgebraFactory"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/token factory/testAlgebrav2.sol": {
+			"keccak256": "0xa18b18f609ae0696d16ccc6f6468fc8035f5a4127b5fbf1a82f5747d4ac2a168",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://b41541a2351776a0bbedd1420370c380ada681516f390eac9213bbd5bfebec17",
+				"dweb:/ipfs/QmYMRGKAAUhQ1Lyejoc1BaZUjA3hWRo2FLqsqevQfeciTh"
+			]
+		}
+	},
+	"version": 1
+}

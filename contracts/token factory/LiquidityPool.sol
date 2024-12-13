@@ -19,7 +19,7 @@ contract LiquidityPool is ReentrancyGuard {
     uint256 public buyTax; // Buy tax in thousandths
     uint256 public sellTax; // Sell tax in thousandths
     bool public migratedToAlgebra; // Whether the pool has migrated to Algebra
-    bool public autoMigrationEnabled; // Whether auto-migration is enabled
+    bool public autoMigrationEnabled = true; // Whether auto-migration is enabled
     uint256 public migrationThreshold; // Threshold to trigger migration
 
     event TokensPurchased(address indexed buyer, uint256 amountIn, uint256 amountOut, uint256 tax);
@@ -30,6 +30,7 @@ contract LiquidityPool is ReentrancyGuard {
     event AlgebraPoolInitializerUpdated(address indexed newInitializer);
     event MigrationThresholdUpdated(uint256 newThreshold);
     event AutoMigrationToggled(bool enabled);
+    event Step(string step, address indexed dataAddress, uint256 indexed value);
 
     modifier onlyFactory() {
         require(msg.sender == tokenFactory, "Caller is not the TokenFactory");
@@ -49,7 +50,9 @@ contract LiquidityPool is ReentrancyGuard {
         address _token0,
         uint256 _initialTokenReserve,
         uint256 _buyTax,
-        uint256 _sellTax
+        uint256 _sellTax,
+        address _algebraPoolInitializer,
+        bool _automigration
     ) external payable onlyFactory nonReentrant {
         require(token0 == address(0), "Pool already initialized");
 
@@ -57,7 +60,8 @@ contract LiquidityPool is ReentrancyGuard {
         reserve0 = _initialTokenReserve;
         buyTax = _buyTax;
         sellTax = _sellTax;
-
+        algebraPoolInitializer = _algebraPoolInitializer;
+        autoMigrationEnabled = _automigration; 
         emit LiquidityAdded(msg.sender, _initialTokenReserve);
     }
 
@@ -79,26 +83,42 @@ contract LiquidityPool is ReentrancyGuard {
     }
 
     function migrateToAlgebra() internal nonReentrant {
-        require(!migratedToAlgebra, "Already migrated to Algebra");
-        require(algebraPoolInitializer != address(0), "Algebra PoolInitializer address not set");
+    emit Step("Migration started", address(this), block.timestamp);
+    
+    require(!migratedToAlgebra, "Already migrated to Algebra");
+    emit Step("Migration check passed", address(this), block.timestamp);
+    
+    require(algebraPoolInitializer != address(0), "Algebra PoolInitializer address not set");
+    emit Step("Initializer check passed", algebraPoolInitializer, block.timestamp);
+    
+    uint160 sqrtPriceX96 = calculateSqrtPriceX96(1, 100); // Adjust parameters as needed
+    emit Step("SqrtPriceX96 calculated", address(0), sqrtPriceX96);
 
-        // Create the Algebra pool
-        bytes memory payload = abi.encodeWithSignature("createPool(address)", token0);
-        (bool success, bytes memory returnData) = algebraPoolInitializer.call(payload);
-        require(success, "Algebra pool creation failed");
+    bytes memory payload = abi.encodeWithSignature(
+        "createAndInitializePoolIfNecessary(address,address,uint160)",
+        token0,
+        address(this),
+        sqrtPriceX96
+    );
 
-        address newPoolAddress = abi.decode(returnData, (address));
-        require(newPoolAddress != address(0), "Invalid Algebra pool address");
+    (bool success, bytes memory returnData) = algebraPoolInitializer.call(payload);
+    emit Step("Call to initializer made", address(algebraPoolInitializer), success ? 1 : 0);
+    require(success, "Algebra pool creation and initialization failed");
 
-        // Transfer the reserves to the new pool
-        IERC20(token0).transfer(newPoolAddress, reserve0);
-        (bool etherTransferSuccess, ) = newPoolAddress.call{value: reserve1}("");
-        require(etherTransferSuccess, "Failed to transfer Ether to Algebra pool");
+    address newPoolAddress = abi.decode(returnData, (address));
+    emit Step("Pool address decoded", newPoolAddress, block.timestamp);
+    require(newPoolAddress != address(0), "Invalid Algebra pool address");
 
-        migratedToAlgebra = true;
+    IERC20(token0).transfer(newPoolAddress, reserve0);
+    emit Step("Tokens transferred", newPoolAddress, reserve0);
 
-        emit MigrationToAlgebra(newPoolAddress, reserve0, reserve1);
-    }
+    (bool etherTransferSuccess, ) = newPoolAddress.call{value: reserve1}("");
+    require(etherTransferSuccess, "Failed to transfer Ether to Algebra pool");
+    emit Step("Ether transferred", newPoolAddress, reserve1);
+
+    migratedToAlgebra = true;
+    emit MigrationToAlgebra(newPoolAddress, reserve0, reserve1);
+}
 
     function buyToken()
         external
@@ -192,4 +212,25 @@ contract LiquidityPool is ReentrancyGuard {
         sellTax = newSellTax;
         emit TaxUpdated(buyTax, newSellTax);
     }
+    function forceMigration() external  {
+    migrateToAlgebra();
+}
+function calculateSqrtPriceX96(uint256 amount0, uint256 amount1) public pure returns (uint160) {
+    require(amount0 > 0 && amount1 > 0, "Amounts must be greater than zero");
+    uint256 ratio = (amount1 << 96) / amount0; // Multiplie amount1 par 2^96 pour obtenir le ratio en virgule fixe
+    uint160 sqrtPriceX96 = uint160(sqrt(ratio) << 48); // La racine carrée du ratio multipliée par 2^48
+    return sqrtPriceX96;
+}
+
+// Fonction auxiliaire pour calculer la racine carrée
+function sqrt(uint256 x) internal pure returns (uint256) {
+    uint256 z = (x + 1) / 2;
+    uint256 y = x;
+    while (z < y) {
+        y = z;
+        z = (x / z + z) / 2;
+    }
+    return y;
+}
+
 }

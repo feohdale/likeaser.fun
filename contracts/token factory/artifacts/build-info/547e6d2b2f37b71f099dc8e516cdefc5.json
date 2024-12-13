@@ -1,0 +1,773 @@
+{
+	"id": "547e6d2b2f37b71f099dc8e516cdefc5",
+	"_format": "hh-sol-build-info-1",
+	"solcVersion": "0.8.26",
+	"solcLongVersion": "0.8.26+commit.8a97fa7a",
+	"input": {
+		"language": "Solidity",
+		"sources": {
+			"contracts/token factory/IAlgebraPool.sol": {
+				"content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.19;\n\ninterface IAlgebraPool {\n    /**\n     * @notice Adds liquidity to the pool.\n     * @param amount0Desired The amount of token0 to add.\n     * @param amount1Desired The amount of token1 to add.\n     * @param amount0Min The minimum amount of token0 to add.\n     * @param amount1Min The minimum amount of token1 to add.\n     * @param recipient The address to receive the liquidity tokens.\n     * @param deadline The timestamp by which the transaction must be confirmed.\n     */\n    function addLiquidity(\n        uint256 amount0Desired,\n        uint256 amount1Desired,\n        uint256 amount0Min,\n        uint256 amount1Min,\n        address recipient,\n        uint256 deadline\n    ) external returns (uint256 amount0, uint256 amount1, uint256 liquidity);\n\n    /**\n     * @notice Removes liquidity from the pool.\n     * @param liquidity The amount of liquidity tokens to remove.\n     * @param amount0Min The minimum amount of token0 to withdraw.\n     * @param amount1Min The minimum amount of token1 to withdraw.\n     * @param recipient The address to receive the withdrawn tokens.\n     * @param deadline The timestamp by which the transaction must be confirmed.\n     */\n    function removeLiquidity(\n        uint256 liquidity,\n        uint256 amount0Min,\n        uint256 amount1Min,\n        address recipient,\n        uint256 deadline\n    ) external returns (uint256 amount0, uint256 amount1);\n}\n"
+			}
+		},
+		"settings": {
+			"optimizer": {
+				"enabled": true,
+				"runs": 200
+			},
+			"outputSelection": {
+				"*": {
+					"": [
+						"ast"
+					],
+					"*": [
+						"abi",
+						"metadata",
+						"devdoc",
+						"userdoc",
+						"storageLayout",
+						"evm.legacyAssembly",
+						"evm.bytecode",
+						"evm.deployedBytecode",
+						"evm.methodIdentifiers",
+						"evm.gasEstimates",
+						"evm.assembly"
+					]
+				}
+			},
+			"remappings": [],
+			"evmVersion": "paris"
+		}
+	},
+	"output": {
+		"contracts": {
+			"contracts/token factory/IAlgebraPool.sol": {
+				"IAlgebraPool": {
+					"abi": [
+						{
+							"inputs": [
+								{
+									"internalType": "uint256",
+									"name": "amount0Desired",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "amount1Desired",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "amount0Min",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "amount1Min",
+									"type": "uint256"
+								},
+								{
+									"internalType": "address",
+									"name": "recipient",
+									"type": "address"
+								},
+								{
+									"internalType": "uint256",
+									"name": "deadline",
+									"type": "uint256"
+								}
+							],
+							"name": "addLiquidity",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "amount0",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "amount1",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "liquidity",
+									"type": "uint256"
+								}
+							],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "uint256",
+									"name": "liquidity",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "amount0Min",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "amount1Min",
+									"type": "uint256"
+								},
+								{
+									"internalType": "address",
+									"name": "recipient",
+									"type": "address"
+								},
+								{
+									"internalType": "uint256",
+									"name": "deadline",
+									"type": "uint256"
+								}
+							],
+							"name": "removeLiquidity",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "amount0",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "amount1",
+									"type": "uint256"
+								}
+							],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						}
+					],
+					"devdoc": {
+						"kind": "dev",
+						"methods": {
+							"addLiquidity(uint256,uint256,uint256,uint256,address,uint256)": {
+								"params": {
+									"amount0Desired": "The amount of token0 to add.",
+									"amount0Min": "The minimum amount of token0 to add.",
+									"amount1Desired": "The amount of token1 to add.",
+									"amount1Min": "The minimum amount of token1 to add.",
+									"deadline": "The timestamp by which the transaction must be confirmed.",
+									"recipient": "The address to receive the liquidity tokens."
+								}
+							},
+							"removeLiquidity(uint256,uint256,uint256,address,uint256)": {
+								"params": {
+									"amount0Min": "The minimum amount of token0 to withdraw.",
+									"amount1Min": "The minimum amount of token1 to withdraw.",
+									"deadline": "The timestamp by which the transaction must be confirmed.",
+									"liquidity": "The amount of liquidity tokens to remove.",
+									"recipient": "The address to receive the withdrawn tokens."
+								}
+							}
+						},
+						"version": 1
+					},
+					"evm": {
+						"assembly": "",
+						"bytecode": {
+							"functionDebugData": {},
+							"generatedSources": [],
+							"linkReferences": {},
+							"object": "",
+							"opcodes": "",
+							"sourceMap": ""
+						},
+						"deployedBytecode": {
+							"functionDebugData": {},
+							"generatedSources": [],
+							"immutableReferences": {},
+							"linkReferences": {},
+							"object": "",
+							"opcodes": "",
+							"sourceMap": ""
+						},
+						"gasEstimates": null,
+						"legacyAssembly": null,
+						"methodIdentifiers": {
+							"addLiquidity(uint256,uint256,uint256,uint256,address,uint256)": "ded998b9",
+							"removeLiquidity(uint256,uint256,uint256,address,uint256)": "ed856cdc"
+						}
+					},
+					"metadata": "{\"compiler\":{\"version\":\"0.8.26+commit.8a97fa7a\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amount0Desired\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount1Desired\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount0Min\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount1Min\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"deadline\",\"type\":\"uint256\"}],\"name\":\"addLiquidity\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"amount0\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount1\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"liquidity\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"liquidity\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount0Min\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount1Min\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"deadline\",\"type\":\"uint256\"}],\"name\":\"removeLiquidity\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"amount0\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount1\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"addLiquidity(uint256,uint256,uint256,uint256,address,uint256)\":{\"params\":{\"amount0Desired\":\"The amount of token0 to add.\",\"amount0Min\":\"The minimum amount of token0 to add.\",\"amount1Desired\":\"The amount of token1 to add.\",\"amount1Min\":\"The minimum amount of token1 to add.\",\"deadline\":\"The timestamp by which the transaction must be confirmed.\",\"recipient\":\"The address to receive the liquidity tokens.\"}},\"removeLiquidity(uint256,uint256,uint256,address,uint256)\":{\"params\":{\"amount0Min\":\"The minimum amount of token0 to withdraw.\",\"amount1Min\":\"The minimum amount of token1 to withdraw.\",\"deadline\":\"The timestamp by which the transaction must be confirmed.\",\"liquidity\":\"The amount of liquidity tokens to remove.\",\"recipient\":\"The address to receive the withdrawn tokens.\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"addLiquidity(uint256,uint256,uint256,uint256,address,uint256)\":{\"notice\":\"Adds liquidity to the pool.\"},\"removeLiquidity(uint256,uint256,uint256,address,uint256)\":{\"notice\":\"Removes liquidity from the pool.\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/token factory/IAlgebraPool.sol\":\"IAlgebraPool\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"contracts/token factory/IAlgebraPool.sol\":{\"keccak256\":\"0xad34106048410b2b5ab5f2b92cc0dbc9663e7af2c2fdaa277fd977c27290e881\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://9299282dad2a2c9cd29bcaf6c44ebe992368d473bac91c75d1911f2d3f5e6b04\",\"dweb:/ipfs/QmcFQiwwwvvQxwqLCBBiJ6cTLMsjKyG8d2Z2yCfgte9XB2\"]}},\"version\":1}",
+					"storageLayout": {
+						"storage": [],
+						"types": null
+					},
+					"userdoc": {
+						"kind": "user",
+						"methods": {
+							"addLiquidity(uint256,uint256,uint256,uint256,address,uint256)": {
+								"notice": "Adds liquidity to the pool."
+							},
+							"removeLiquidity(uint256,uint256,uint256,address,uint256)": {
+								"notice": "Removes liquidity from the pool."
+							}
+						},
+						"version": 1
+					}
+				}
+			}
+		},
+		"sources": {
+			"contracts/token factory/IAlgebraPool.sol": {
+				"ast": {
+					"absolutePath": "contracts/token factory/IAlgebraPool.sol",
+					"exportedSymbols": {
+						"IAlgebraPool": [
+							42
+						]
+					},
+					"id": 43,
+					"license": "MIT",
+					"nodeType": "SourceUnit",
+					"nodes": [
+						{
+							"id": 1,
+							"literals": [
+								"solidity",
+								"^",
+								"0.8",
+								".19"
+							],
+							"nodeType": "PragmaDirective",
+							"src": "32:24:0"
+						},
+						{
+							"abstract": false,
+							"baseContracts": [],
+							"canonicalName": "IAlgebraPool",
+							"contractDependencies": [],
+							"contractKind": "interface",
+							"fullyImplemented": false,
+							"id": 42,
+							"linearizedBaseContracts": [
+								42
+							],
+							"name": "IAlgebraPool",
+							"nameLocation": "68:12:0",
+							"nodeType": "ContractDefinition",
+							"nodes": [
+								{
+									"documentation": {
+										"id": 2,
+										"nodeType": "StructuredDocumentation",
+										"src": "87:444:0",
+										"text": " @notice Adds liquidity to the pool.\n @param amount0Desired The amount of token0 to add.\n @param amount1Desired The amount of token1 to add.\n @param amount0Min The minimum amount of token0 to add.\n @param amount1Min The minimum amount of token1 to add.\n @param recipient The address to receive the liquidity tokens.\n @param deadline The timestamp by which the transaction must be confirmed."
+									},
+									"functionSelector": "ded998b9",
+									"id": 23,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "addLiquidity",
+									"nameLocation": "545:12:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 15,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 4,
+												"mutability": "mutable",
+												"name": "amount0Desired",
+												"nameLocation": "575:14:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 23,
+												"src": "567:22:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 3,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "567:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 6,
+												"mutability": "mutable",
+												"name": "amount1Desired",
+												"nameLocation": "607:14:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 23,
+												"src": "599:22:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 5,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "599:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 8,
+												"mutability": "mutable",
+												"name": "amount0Min",
+												"nameLocation": "639:10:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 23,
+												"src": "631:18:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 7,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "631:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 10,
+												"mutability": "mutable",
+												"name": "amount1Min",
+												"nameLocation": "667:10:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 23,
+												"src": "659:18:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 9,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "659:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 12,
+												"mutability": "mutable",
+												"name": "recipient",
+												"nameLocation": "695:9:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 23,
+												"src": "687:17:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												},
+												"typeName": {
+													"id": 11,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "687:7:0",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 14,
+												"mutability": "mutable",
+												"name": "deadline",
+												"nameLocation": "722:8:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 23,
+												"src": "714:16:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 13,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "714:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "557:179:0"
+									},
+									"returnParameters": {
+										"id": 22,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 17,
+												"mutability": "mutable",
+												"name": "amount0",
+												"nameLocation": "763:7:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 23,
+												"src": "755:15:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 16,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "755:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 19,
+												"mutability": "mutable",
+												"name": "amount1",
+												"nameLocation": "780:7:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 23,
+												"src": "772:15:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 18,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "772:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 21,
+												"mutability": "mutable",
+												"name": "liquidity",
+												"nameLocation": "797:9:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 23,
+												"src": "789:17:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 20,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "789:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "754:53:0"
+									},
+									"scope": 42,
+									"src": "536:272:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"documentation": {
+										"id": 24,
+										"nodeType": "StructuredDocumentation",
+										"src": "814:409:0",
+										"text": " @notice Removes liquidity from the pool.\n @param liquidity The amount of liquidity tokens to remove.\n @param amount0Min The minimum amount of token0 to withdraw.\n @param amount1Min The minimum amount of token1 to withdraw.\n @param recipient The address to receive the withdrawn tokens.\n @param deadline The timestamp by which the transaction must be confirmed."
+									},
+									"functionSelector": "ed856cdc",
+									"id": 41,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "removeLiquidity",
+									"nameLocation": "1237:15:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 35,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 26,
+												"mutability": "mutable",
+												"name": "liquidity",
+												"nameLocation": "1270:9:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 41,
+												"src": "1262:17:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 25,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "1262:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 28,
+												"mutability": "mutable",
+												"name": "amount0Min",
+												"nameLocation": "1297:10:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 41,
+												"src": "1289:18:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 27,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "1289:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 30,
+												"mutability": "mutable",
+												"name": "amount1Min",
+												"nameLocation": "1325:10:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 41,
+												"src": "1317:18:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 29,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "1317:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 32,
+												"mutability": "mutable",
+												"name": "recipient",
+												"nameLocation": "1353:9:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 41,
+												"src": "1345:17:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												},
+												"typeName": {
+													"id": 31,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "1345:7:0",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 34,
+												"mutability": "mutable",
+												"name": "deadline",
+												"nameLocation": "1380:8:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 41,
+												"src": "1372:16:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 33,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "1372:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "1252:142:0"
+									},
+									"returnParameters": {
+										"id": 40,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 37,
+												"mutability": "mutable",
+												"name": "amount0",
+												"nameLocation": "1421:7:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 41,
+												"src": "1413:15:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 36,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "1413:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 39,
+												"mutability": "mutable",
+												"name": "amount1",
+												"nameLocation": "1438:7:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 41,
+												"src": "1430:15:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 38,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "1430:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "1412:34:0"
+									},
+									"scope": 42,
+									"src": "1228:219:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								}
+							],
+							"scope": 43,
+							"src": "58:1391:0",
+							"usedErrors": [],
+							"usedEvents": []
+						}
+					],
+					"src": "32:1418:0"
+				},
+				"id": 0
+			}
+		}
+	}
+}
