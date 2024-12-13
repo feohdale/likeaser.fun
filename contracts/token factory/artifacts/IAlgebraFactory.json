@@ -49,7 +49,7 @@
 		},
 		"gasEstimates": null,
 		"methodIdentifiers": {
-			"createAndInitializePoolIfNecessary(address,address,address,uint160,uint256)": "c00d4215"
+			"createAndInitializePoolIfNecessary(address,address,address,uint160)": "8753a19a"
 		}
 	},
 	"abi": [
@@ -74,11 +74,6 @@
 					"internalType": "uint160",
 					"name": "sqrtPriceX96",
 					"type": "uint160"
-				},
-				{
-					"internalType": "uint256",
-					"name": "sendNativeTRBTC",
-					"type": "uint256"
 				}
 			],
 			"name": "createAndInitializePoolIfNecessary",

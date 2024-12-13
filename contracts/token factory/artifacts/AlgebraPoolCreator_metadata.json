@@ -35,11 +35,6 @@
 						"internalType": "uint160",
 						"name": "_sqrtPriceX96",
 						"type": "uint160"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_sendNativeTRBTC",
-						"type": "uint256"
 					}
 				],
 				"name": "createPoolAlgebra",
@@ -115,11 +110,11 @@
 	},
 	"sources": {
 		"contracts/token factory/testAlgebrav2.sol": {
-			"keccak256": "0xa18b18f609ae0696d16ccc6f6468fc8035f5a4127b5fbf1a82f5747d4ac2a168",
+			"keccak256": "0xe93b3e93627a8e8af409d70604195e19efda00bc999d450fe1050a4aee8208cd",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://b41541a2351776a0bbedd1420370c380ada681516f390eac9213bbd5bfebec17",
-				"dweb:/ipfs/QmYMRGKAAUhQ1Lyejoc1BaZUjA3hWRo2FLqsqevQfeciTh"
+				"bzz-raw://e3a23c428c703824af4d0fad3a008b87bdd0166039dad7b823625dde1ec14900",
+				"dweb:/ipfs/QmWj4kaJSWzmDNKkkiPkbM1ncc3YdJjetpEoAS7uxohAiM"
 			]
 		}
 	},

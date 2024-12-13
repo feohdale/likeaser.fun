@@ -10,8 +10,7 @@ interface IAlgebraFactory {
         address token0,
         address token1,
         address deployer,
-        uint160 sqrtPriceX96,
-        uint256 sendNativeTRBTC
+        uint160 sqrtPriceX96
     ) external payable returns (address pool);
 }
 
@@ -100,16 +99,15 @@ contract AlgebraPoolCreator {
     }
 
 
-    function createPoolAlgebra(uint160 _sqrtPriceX96, uint256 _sendNativeTRBTC) external payable {
+    function createPoolAlgebra(uint160 _sqrtPriceX96) external payable {
         IAlgebraFactory factory = IAlgebraFactory(algebraFactory);
 
         // Appel avec 5 paramètres + payable
-        address pool = factory.createAndInitializePoolIfNecessary{value: msg.value}(
+        address pool = factory.createAndInitializePoolIfNecessary(
             tokenA,
             tokenB,
             address(0x0000000000000000000000000000000000000000),     
-            _sqrtPriceX96,
-            _sendNativeTRBTC
+            _sqrtPriceX96
         );
         
         liquidityPool = pool;
