@@ -80,6 +80,50 @@
 				"anonymous": false,
 				"inputs": [
 					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "tokenAmount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "ethAmount",
+						"type": "uint256"
+					}
+				],
+				"name": "MigrationExecuted",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "poolAddress",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					}
+				],
+				"name": "MigrationStarted",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
 						"indexed": false,
 						"internalType": "uint256",
 						"name": "newThreshold",
@@ -452,6 +496,19 @@
 			},
 			{
 				"inputs": [],
+				"name": "migrator",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "reserve0",
 				"outputs": [
 					{
@@ -651,11 +708,11 @@
 			]
 		},
 		"contracts/token factory/LiquidityPool.sol": {
-			"keccak256": "0x1f1f24914b07f0fb93b95de01a172746af40eaede63be529b3cfc922283d7fa6",
+			"keccak256": "0x988af521a3ee3c1f90cc9e703ea8433a7b459a184e9158dd3478411ed6186643",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://ab878e3cd3c422564b4aa5d58a7c456f87b7c6dcddcf35a81031c01437b3333f",
-				"dweb:/ipfs/QmNaZtDQaCmG9CKdvRi2mZ3dVo2cM5dE85oWV9ps72BvWG"
+				"bzz-raw://ff6b8ccbc3fdd093617f4b7058f7ec284b352364c1fff9351fa62e8cdd40ba7a",
+				"dweb:/ipfs/QmTuJrQpNYbxibUXKfeLRqpKYtkHbRJSq7EJnf8QmMmyjZ"
 			]
 		}
 	},

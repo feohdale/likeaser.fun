@@ -43,7 +43,6 @@
 		"devdoc": {
 			"kind": "dev",
 			"methods": {},
-			"title": "Interface d'Algebra (version avec paramètre sendNativeTRBTC)",
 			"version": 1
 		},
 		"userdoc": {
@@ -69,11 +68,11 @@
 	},
 	"sources": {
 		"contracts/token factory/testAlgebrav2.sol": {
-			"keccak256": "0xe93b3e93627a8e8af409d70604195e19efda00bc999d450fe1050a4aee8208cd",
+			"keccak256": "0xa5a031a82508109e3a0d44581eae82ab5988c05b13a243dd6108b12a21829fb7",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://e3a23c428c703824af4d0fad3a008b87bdd0166039dad7b823625dde1ec14900",
-				"dweb:/ipfs/QmWj4kaJSWzmDNKkkiPkbM1ncc3YdJjetpEoAS7uxohAiM"
+				"bzz-raw://4c4176114efd9979f6b6ab4e26d941cdf169b3e07ebb5e6478aea900ad011288",
+				"dweb:/ipfs/QmSYCBowNXYK6VvMXtUcMt4BdDXNnzunaPByikD6zQiAsh"
 			]
 		}
 	},

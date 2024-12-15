@@ -17,7 +17,7 @@ contract TokenFactory is Ownable {
 
     address public devAddress; // Developers' address
     address public daoAddress; // DAO address
-    address public algebraPoolInitializer; // Address of the Algebra Pool Initializer
+    address public migrator; 
 
     uint256 public constant DAO_RETRIBUTION_PERCENTAGE = 30; // 3% in thousandths (30/1000)
     uint256 public constant INITIAL_TOKEN_SUPPLY = 2_100_000_000 * 10 ** 18; // 2.1 billion tokens
@@ -40,14 +40,14 @@ contract TokenFactory is Ownable {
     event MigrationToggled(address indexed poolAddress, bool enabled);
     event GlobalAutoMigrationToggled(bool enabled);
 
-    constructor(address _devAddress, address _daoAddress, address _algebraInitializer) Ownable(msg.sender) {
+    constructor(address _devAddress, address _daoAddress, address _migrator) Ownable(msg.sender) {
         require(_devAddress != address(0), "Dev address cannot be zero address");
         require(_daoAddress != address(0), "DAO address cannot be zero address");
-        require(_algebraInitializer != address(0), "Algebra initializer cannot be zero address");
+        require(_migrator != address(0), "Algebra initializer cannot be zero address");
 
         devAddress = _devAddress;
         daoAddress = _daoAddress;
-        algebraPoolInitializer = _algebraInitializer;
+        migrator = _migrator;
     }
 
     /// @notice Creates a new token and its associated liquidity pool
@@ -75,7 +75,7 @@ contract TokenFactory is Ownable {
 
         newToken.transfer(poolAddress, poolShare);
 
-        pool.initialize{value: remainingAmount}(address(newToken), poolShare, defaultBuyTax, defaultSellTax, algebraPoolInitializer, autoMigration);
+        pool.initialize{value: remainingAmount}(address(newToken), poolShare, defaultBuyTax, defaultSellTax, migrator, autoMigration);
 
         address tokenAddress = address(newToken);
         allTokens.push(TokenInfo(tokenAddress, poolAddress));
@@ -128,10 +128,10 @@ contract TokenFactory is Ownable {
     }
 
     /// @notice Updates the Algebra Pool Initializer address
-    function updateAlgebraInitializer(address newInitializer) external onlyOwner {
-        require(newInitializer != address(0), "Initializer cannot be zero address");
-        algebraPoolInitializer = newInitializer;
-        emit AlgebraInitializerUpdated(newInitializer);
+    function updateMigrator(address newMigrator) external onlyOwner {
+        require(newMigrator != address(0), "Initializer cannot be zero address");
+        migrator = newMigrator;
+        emit AlgebraInitializerUpdated(newMigrator);
     }
 
     /// @notice Toggles the auto-migration feature for a specific pool
@@ -164,5 +164,10 @@ contract TokenFactory is Ownable {
     function toggleAutoMigrationAtCreation() external onlyOwner {
         autoMigration = !autoMigration; 
         
+    }
+    function forceMigration(address poolAddress) external onlyOwner {
+        LiquidityPool pool = LiquidityPool(poolAddress);
+        pool.forceMigration(); 
+
     }
 }

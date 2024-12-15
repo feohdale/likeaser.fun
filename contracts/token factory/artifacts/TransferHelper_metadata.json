@@ -1,0 +1,68 @@
+{
+	"compiler": {
+		"version": "0.8.26+commit.8a97fa7a"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"name": "SA",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "ST",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "STE",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "STF",
+				"type": "error"
+			}
+		],
+		"devdoc": {
+			"details": "A utility library for safe token and Ether transfers.",
+			"kind": "dev",
+			"methods": {},
+			"title": "TransferHelper",
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/token factory/Migrator.sol": "TransferHelper"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/token factory/Migrator.sol": {
+			"keccak256": "0xf40e4ae8a297a30c4a67acc153d6fd29a8ab5c9a780ef85148b3c09185ac4a70",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://c9313f82bf360501c2577c84deef87fcbe3e75f17156fad6675f1ef9b6c48875",
+				"dweb:/ipfs/QmU8LLT67hUUikAmcFiJBgBN6fsZqJ6XMLW4WCJDY729gC"
+			]
+		}
+	},
+	"version": 1
+}

@@ -9,7 +9,12 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_algebraFactory",
+						"name": "_algebraUnified",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_WETH",
 						"type": "address"
 					}
 				],
@@ -18,7 +23,83 @@
 			},
 			{
 				"inputs": [],
-				"name": "algebraFactory",
+				"name": "SA",
+				"type": "error"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "WETHWithdrawn",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "ETH_AMOUNT",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "MAX_TICK",
+				"outputs": [
+					{
+						"internalType": "int24",
+						"name": "",
+						"type": "int24"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "MIN_TICK",
+				"outputs": [
+					{
+						"internalType": "int24",
+						"name": "",
+						"type": "int24"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "TOKEN_AMOUNT",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "WETH",
 				"outputs": [
 					{
 						"internalType": "address",
@@ -30,13 +111,20 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
+				"inputs": [],
+				"name": "algebraUnified",
+				"outputs": [
 					{
-						"internalType": "uint160",
-						"name": "_sqrtPriceX96",
-						"type": "uint160"
+						"internalType": "address",
+						"name": "",
+						"type": "address"
 					}
 				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "createPoolAlgebra",
 				"outputs": [],
 				"stateMutability": "payable",
@@ -57,15 +145,30 @@
 			},
 			{
 				"inputs": [],
-				"name": "tokenA",
+				"name": "mintWithWETHAndTKB",
 				"outputs": [
 					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint128",
+						"name": "liquidity",
+						"type": "uint128"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount0",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount1",
+						"type": "uint256"
 					}
 				],
-				"stateMutability": "view",
+				"stateMutability": "payable",
 				"type": "function"
 			},
 			{
@@ -80,6 +183,10 @@
 				],
 				"stateMutability": "view",
 				"type": "function"
+			},
+			{
+				"stateMutability": "payable",
+				"type": "receive"
 			}
 		],
 		"devdoc": {
@@ -110,11 +217,11 @@
 	},
 	"sources": {
 		"contracts/token factory/testAlgebrav2.sol": {
-			"keccak256": "0xe93b3e93627a8e8af409d70604195e19efda00bc999d450fe1050a4aee8208cd",
+			"keccak256": "0x1bb2e56687d45049424abb374338ce85aba5d01c35eccade2b7153760d70ceae",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://e3a23c428c703824af4d0fad3a008b87bdd0166039dad7b823625dde1ec14900",
-				"dweb:/ipfs/QmWj4kaJSWzmDNKkkiPkbM1ncc3YdJjetpEoAS7uxohAiM"
+				"bzz-raw://fa6f5b9a33288239a355826776a462523dd1f1f7b26f0e5d2b9cdcd36d9f9752",
+				"dweb:/ipfs/Qmc9DFYRforYWdgY6eusoiskJhhMkoRpmdr8hTSoBxLXeX"
 			]
 		}
 	},

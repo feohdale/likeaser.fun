@@ -49,10 +49,24 @@
 		},
 		"gasEstimates": null,
 		"methodIdentifiers": {
-			"addLiquidity(address,address,int24,int24,uint128,bytes)": "c76537fd"
+			"initialize(uint160)": "f637731d",
+			"mint(address,address,int24,int24,uint128,bytes)": "aafe29c0"
 		}
 	},
 	"abi": [
+		{
+			"inputs": [
+				{
+					"internalType": "uint160",
+					"name": "sqrtPriceX96",
+					"type": "uint160"
+				}
+			],
+			"name": "initialize",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
 		{
 			"inputs": [
 				{
@@ -86,8 +100,19 @@
 					"type": "bytes"
 				}
 			],
-			"name": "addLiquidity",
-			"outputs": [],
+			"name": "mint",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "amount0",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "amount1",
+					"type": "uint256"
+				}
+			],
 			"stateMutability": "nonpayable",
 			"type": "function"
 		}

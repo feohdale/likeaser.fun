@@ -3,7 +3,22 @@ pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+interface IMigrator {
+    struct MigrationParams {
+        address token;
+        uint256 tokenAmount;
+    }
 
+    function initiateMigration(address token, uint256 tokenAmount) external payable;
+
+    function updateAlgebraUnified(address _algebraUnified) external;
+
+    function updateWETH(address _WETH) external;
+
+    function emergencyWithdraw() external;
+
+    function emergencyWithdrawTokens(address token) external;
+}
 contract LiquidityPool is ReentrancyGuard {
     uint256 public constant X_DELTA_LOWER = 257627658726967931872702964;
     uint256 public constant X_DELTA_UPPER = 257627658726993462773682809;
@@ -14,6 +29,7 @@ contract LiquidityPool is ReentrancyGuard {
     address public tokenFactory; // TokenFactory address
     address public devAddress; // Developer address
     address public algebraPoolInitializer; // Algebra PoolInitializer contract address
+    address public migrator; 
     uint256 public reserve0; // Token reserve
     uint256 public reserve1; // Native currency reserve (e.g., Ether)
     uint256 public buyTax; // Buy tax in thousandths
@@ -31,7 +47,10 @@ contract LiquidityPool is ReentrancyGuard {
     event MigrationThresholdUpdated(uint256 newThreshold);
     event AutoMigrationToggled(bool enabled);
     event Step(string step, address indexed dataAddress, uint256 indexed value);
-
+    event MigrationStarted(address indexed poolAddress, uint256 timestamp);
+    event MigrationExecuted(address indexed token, uint256 tokenAmount, uint256 ethAmount);
+    
+    
     modifier onlyFactory() {
         require(msg.sender == tokenFactory, "Caller is not the TokenFactory");
         _;
@@ -82,7 +101,7 @@ contract LiquidityPool is ReentrancyGuard {
         emit MigrationThresholdUpdated(newThreshold);
     }
 
-    function migrateToAlgebra() internal nonReentrant {
+    /*function migrateToAlgebra() internal nonReentrant {
     emit Step("Migration started", address(this), block.timestamp);
     
     require(!migratedToAlgebra, "Already migrated to Algebra");
@@ -119,7 +138,35 @@ contract LiquidityPool is ReentrancyGuard {
     migratedToAlgebra = true;
     emit MigrationToAlgebra(newPoolAddress, reserve0, reserve1);
 }
+*/
+function migrate() internal nonReentrant {
+    require(!migratedToAlgebra, "Already migrated to Algebra");
+    require(address(migrator) != address(0), "Migrator address not set");
+    require(address(token0) != address(0), "Token not set");
+    require(reserve1 >= migrationThreshold, "Threshold not met for migration");
 
+    emit MigrationStarted(address(this), block.timestamp);
+
+    // Approve the migrator to transfer tokens and Ether
+    IERC20(token0).approve(migrator, reserve0);
+
+    // Call the migrator to perform the migration
+   /* bool success = IMigrator(migrator).initiateMigration{value: reserve1}(
+        address(token0),
+        reserve0,
+        reserve1,
+        address(this)
+    );*/
+   bool success = IMigrator(migrator).initiateMigration{value: reserve1}(address(token0), reserve0);
+
+        emit MigrationExecuted(address(token0), reserve0, msg.value);
+    //require(success, "Migration failed");
+
+    // Update the state
+    migratedToAlgebra = true;
+
+   
+}
     function buyToken()
         external
         payable
@@ -213,7 +260,7 @@ contract LiquidityPool is ReentrancyGuard {
         emit TaxUpdated(buyTax, newSellTax);
     }
     function forceMigration() external  {
-    migrateToAlgebra();
+    migrate();
 }
 function calculateSqrtPriceX96(uint256 amount0, uint256 amount1) public pure returns (uint160) {
     require(amount0 > 0 && amount1 > 0, "Amounts must be greater than zero");

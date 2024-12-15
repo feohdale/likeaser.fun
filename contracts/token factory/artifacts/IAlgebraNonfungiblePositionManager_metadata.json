@@ -1,0 +1,138 @@
+{
+	"compiler": {
+		"version": "0.8.26+commit.8a97fa7a"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "token0",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "token1",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "deployer",
+								"type": "address"
+							},
+							{
+								"internalType": "int24",
+								"name": "tickLower",
+								"type": "int24"
+							},
+							{
+								"internalType": "int24",
+								"name": "tickUpper",
+								"type": "int24"
+							},
+							{
+								"internalType": "uint256",
+								"name": "amount0Desired",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "amount1Desired",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "amount0Min",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "amount1Min",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "recipient",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "deadline",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct IAlgebraNonfungiblePositionManager.MintParams",
+						"name": "params",
+						"type": "tuple"
+					}
+				],
+				"name": "mint",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint128",
+						"name": "liquidity",
+						"type": "uint128"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount0",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount1",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "payable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"title": "Interface NonfungiblePositionManager Algebra/Uniswap V3-like  Permet d'ajouter de la liquidité via la fonction mint(...).",
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/token factory/testAlgebrav2.sol": "IAlgebraNonfungiblePositionManager"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/token factory/testAlgebrav2.sol": {
+			"keccak256": "0xa8afdb185a0bd0e3cefe1c2ecdc0f7f6cc9a41d2943dc4a199a2de943524079e",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://a11a1d07ec91bfb55a045018cfcef21968a69900f037b940813a204a76dc6e01",
+				"dweb:/ipfs/QmVsyCrXfxknHVnu2wxdrm2k4L49Ap9uXqPMPyu1PV8GsE"
+			]
+		}
+	},
+	"version": 1
+}

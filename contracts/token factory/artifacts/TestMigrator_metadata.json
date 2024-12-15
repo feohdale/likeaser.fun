@@ -1,0 +1,186 @@
+{
+	"compiler": {
+		"version": "0.8.26+commit.8a97fa7a"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_algebraUnified",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_weth",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "tokenAmount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "ethAmount",
+						"type": "uint256"
+					}
+				],
+				"name": "MigrationExecuted",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "algebraUnified",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "tokenAmount",
+						"type": "uint256"
+					}
+				],
+				"name": "createAndMigrate",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "customToken",
+				"outputs": [
+					{
+						"internalType": "contract CustomToken",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getCustomTokenAddress",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getMigratorAddress",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "migrator",
+				"outputs": [
+					{
+						"internalType": "contract Migrator",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "weth",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/token factory/TestMigrator.sol": "TestMigrator"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/token factory/Migrator.sol": {
+			"keccak256": "0x3e5ffcd3c4e28ac410a816a69e7cfb913590dc8a6859793ee879db69131a2d93",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://3e38b57c91f897405f8c1fa82210ce2df3d66f568b30af1ff9ed45217f354ed0",
+				"dweb:/ipfs/QmP3LfMCqw11G1kAtqHHDcugGdkVsWqAkcttbLRAQwwt9V"
+			]
+		},
+		"contracts/token factory/TestMigrator.sol": {
+			"keccak256": "0xb36d5c5a5730758d5474d8b6467b8e5d197336f90ccb367cac946b80b2a1eff0",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://56110834d275cda9cfda71d9b98c7941f47ed8e9c14f341a74086cfc47a3e211",
+				"dweb:/ipfs/QmNreYSnLP5J7KcbbJfquXwPZPrp1TYrtBESqqraASZe7V"
+			]
+		}
+	},
+	"version": 1
+}

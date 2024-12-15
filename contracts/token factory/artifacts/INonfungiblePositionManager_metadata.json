@@ -1,0 +1,142 @@
+{
+	"compiler": {
+		"version": "0.8.26+commit.8a97fa7a"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "token0",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "token1",
+								"type": "address"
+							},
+							{
+								"internalType": "int24",
+								"name": "tickLower",
+								"type": "int24"
+							},
+							{
+								"internalType": "int24",
+								"name": "tickUpper",
+								"type": "int24"
+							},
+							{
+								"internalType": "uint256",
+								"name": "amount0Desired",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "amount1Desired",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "amount0Min",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "amount1Min",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "recipient",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "deadline",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct INonfungiblePositionManager.MintParams",
+						"name": "params",
+						"type": "tuple"
+					}
+				],
+				"name": "mint",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint128",
+						"name": "liquidity",
+						"type": "uint128"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount0",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount1",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "payable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {
+				"mint((address,address,int24,int24,uint256,uint256,uint256,uint256,address,uint256))": {
+					"params": {
+						"params": "The struct with all required parameters"
+					}
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {
+				"mint((address,address,int24,int24,uint256,uint256,uint256,uint256,address,uint256))": {
+					"notice": "Mints a new position as an NFT"
+				}
+			},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/token factory/testAlgebrav2.sol": "INonfungiblePositionManager"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/token factory/testAlgebrav2.sol": {
+			"keccak256": "0xa5a031a82508109e3a0d44581eae82ab5988c05b13a243dd6108b12a21829fb7",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://4c4176114efd9979f6b6ab4e26d941cdf169b3e07ebb5e6478aea900ad011288",
+				"dweb:/ipfs/QmSYCBowNXYK6VvMXtUcMt4BdDXNnzunaPByikD6zQiAsh"
+			]
+		}
+	},
+	"version": 1
+}
