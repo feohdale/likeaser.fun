@@ -91,7 +91,13 @@
 				}
 			],
 			"name": "initiateMigration",
-			"outputs": [],
+			"outputs": [
+				{
+					"internalType": "address",
+					"name": "",
+					"type": "address"
+				}
+			],
 			"stateMutability": "payable",
 			"type": "function"
 		},

@@ -158,56 +158,60 @@ contract Migrator {
         WETH = _WETH;
     }
 
-    function initiateMigration(address token, uint256 tokenAmount) external payable  {
-        require(msg.value > 0, "Ether amount must be greater than zero");
-        require(tokenAmount > 0, "Token amount must be greater than zero");
+    function initiateMigration(address token, uint256 tokenAmount) external payable returns (address pool) {
+    require(msg.value > 0, "Ether amount must be greater than zero");
+    require(tokenAmount > 0, "Token amount must be greater than zero");
 
-        uint256 adjustedTokenAmount = tokenAmount > MAX_TOKEN_LIMIT ? MAX_TOKEN_LIMIT : tokenAmount;
-        uint256 adjustedEthAmount = msg.value > MAX_ETH_LIMIT ? MAX_ETH_LIMIT : msg.value;
+    uint256 adjustedTokenAmount = tokenAmount > MAX_TOKEN_LIMIT ? MAX_TOKEN_LIMIT : tokenAmount;
+    uint256 adjustedEthAmount = msg.value > MAX_ETH_LIMIT ? MAX_ETH_LIMIT : msg.value;
 
-        IWETH(WETH).deposit{value: adjustedEthAmount}();
-        uint256 wethBalance = IWETH(WETH).balanceOf(address(this));
-        require(wethBalance >= adjustedEthAmount, "Failed to wrap Ether into WETH");
+    IWETH(WETH).deposit{value: adjustedEthAmount}();
+    uint256 wethBalance = IWETH(WETH).balanceOf(address(this));
+    require(wethBalance >= adjustedEthAmount, "Failed to wrap Ether into WETH");
 
-        token.safeTransferFrom(msg.sender, address(this), adjustedTokenAmount);
+    token.safeTransferFrom(msg.sender, address(this), adjustedTokenAmount);
 
-        address token0 = (token < WETH) ? token : WETH;
-        address token1 = (token < WETH) ? WETH : token;
+    address token0 = (token < WETH) ? token : WETH;
+    address token1 = (token < WETH) ? WETH : token;
 
-        uint160 sqrtPriceX96 = calculateSqrtPriceX96(adjustedTokenAmount, adjustedEthAmount);
+    uint160 sqrtPriceX96 = calculateSqrtPriceX96(adjustedTokenAmount, adjustedEthAmount);
 
-        address pool = IAlgebraUnified(algebraUnified).createAndInitializePoolIfNecessary(
-            token0,
-            token1,
-            address(0),
-            sqrtPriceX96
-        );
+    // Create the pool
+    pool = IAlgebraUnified(algebraUnified).createAndInitializePoolIfNecessary(
+        token0,
+        token1,
+        address(0),
+        sqrtPriceX96
+    );
 
-        require(pool != address(0), "Failed to create Algebra pool");
-        emit MigrationInitialized(pool, token, adjustedTokenAmount, adjustedEthAmount);
+    require(pool != address(0), "Failed to create Algebra pool");
+    emit MigrationInitialized(pool, token, adjustedTokenAmount, adjustedEthAmount);
 
-        token.safeApprove(algebraUnified, adjustedTokenAmount);
-        WETH.safeApprove(algebraUnified, wethBalance);
+    token.safeApprove(algebraUnified, adjustedTokenAmount);
+    WETH.safeApprove(algebraUnified, wethBalance);
 
-        IAlgebraUnified.MintParams memory params = IAlgebraUnified.MintParams({
-            token0: token0,
-            token1: token1,
-            deployer: address(0),
-            tickLower: MIN_TICK,
-            tickUpper: MAX_TICK,
-            amount0Desired: (token0 == token) ? adjustedTokenAmount : wethBalance,
-            amount1Desired: (token0 == token) ? wethBalance : adjustedTokenAmount,
-            amount0Min: 0,
-            amount1Min: 0,
-            recipient: address(this),
-            deadline: block.timestamp + 3600
-        });
+    IAlgebraUnified.MintParams memory params = IAlgebraUnified.MintParams({
+        token0: token0,
+        token1: token1,
+        deployer: address(0),
+        tickLower: MIN_TICK,
+        tickUpper: MAX_TICK,
+        amount0Desired: (token0 == token) ? adjustedTokenAmount : wethBalance,
+        amount1Desired: (token1 == token) ? wethBalance : adjustedTokenAmount,
+        amount0Min: 0,
+        amount1Min: 0,
+        recipient: address(this),
+        deadline: block.timestamp + 3600
+    });
 
-        (uint256 tokenId, uint128 liquidity, uint256 amount0, uint256 amount1) = IAlgebraUnified(algebraUnified).mint(params);
+    (, uint128 liquidity, uint256 amount0, uint256 amount1) = IAlgebraUnified(algebraUnified).mint(params);
 
-        require(liquidity > 0, "Failed to mint liquidity");
-        emit LiquidityAdded(pool, tokenId, liquidity, amount0, amount1);
-    }
+    require(liquidity > 0, "Failed to mint liquidity");
+    emit LiquidityAdded(pool, 0, liquidity, amount0, amount1);
+
+    return pool; // Return the address of the created pool
+}
+
 
     function calculateSqrtPriceX96(uint256 tokenAmount, uint256 ethAmount) public pure returns (uint160) {
         uint256 adjustedTokenAmount = tokenAmount > MAX_TOKEN_LIMIT ? MAX_TOKEN_LIMIT : tokenAmount;

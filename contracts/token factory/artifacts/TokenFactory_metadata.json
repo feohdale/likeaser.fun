@@ -814,11 +814,11 @@
 			]
 		},
 		"contracts/token factory/LiquidityPool.sol": {
-			"keccak256": "0x6a6ea2d3baf20bc8c8982f77941980edc22eeda8b228cb153531165b59cd4767",
+			"keccak256": "0xe47f1d562918c3a877a61fb02222adc8973b18d1882f18f8370d248bff75bad4",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://29c31b28e6d46311af71f50b378decaf9afb84e72e80f2aaa28c08e5006fc65a",
-				"dweb:/ipfs/QmeXXZEwfm6nrTEhHg41a5dsi8TYPLYwbtRDJqWk54fWF4"
+				"bzz-raw://75b0488fd0a6eba0d4a7062cc58c427c69cd1db66c89d1cb61887f7af680b263",
+				"dweb:/ipfs/QmUqgrg426oqSKAx1SZ7TH8xdaNv8J6LG6HDz8z22RvBqS"
 			]
 		},
 		"contracts/token factory/tokenfactoryV2.sol": {

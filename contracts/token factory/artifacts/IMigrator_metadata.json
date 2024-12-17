@@ -39,7 +39,13 @@
 					}
 				],
 				"name": "initiateMigration",
-				"outputs": [],
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
 				"stateMutability": "payable",
 				"type": "function"
 			},
@@ -114,11 +120,11 @@
 			]
 		},
 		"contracts/token factory/LiquidityPool.sol": {
-			"keccak256": "0x988af521a3ee3c1f90cc9e703ea8433a7b459a184e9158dd3478411ed6186643",
+			"keccak256": "0xb6a8ff707cfcb26233c3a7df7a2b1c170dc6801d48644c9d99a45c177d863c10",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://ff6b8ccbc3fdd093617f4b7058f7ec284b352364c1fff9351fa62e8cdd40ba7a",
-				"dweb:/ipfs/QmTuJrQpNYbxibUXKfeLRqpKYtkHbRJSq7EJnf8QmMmyjZ"
+				"bzz-raw://effe95809269012da436a41eaad3180cb7ee1987bba6cc789c446f382bc56890",
+				"dweb:/ipfs/QmfYi6TbQFe6KoGGoSY2cvttve3sHVV615ZFqp5o2vxrmX"
 			]
 		}
 	},

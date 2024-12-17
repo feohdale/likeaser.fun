@@ -9,7 +9,8 @@ interface IMigrator {
         uint256 tokenAmount;
     }
 
-    function initiateMigration(address token, uint256 tokenAmount) external payable;
+    function initiateMigration(address token, uint256 tokenAmount) external payable returns (address);
+
 
     function updateAlgebraUnified(address _algebraUnified) external;
 
@@ -30,10 +31,12 @@ contract LiquidityPool is ReentrancyGuard {
     address public devAddress; // Developer address
     address public algebraPoolInitializer; // Algebra PoolInitializer contract address
     address public migrator; 
+    address public algebraPoolAddress; 
     uint256 public reserve0; // Token reserve
     uint256 public reserve1; // Native currency reserve (e.g., Ether)
     uint256 public buyTax; // Buy tax in thousandths
     uint256 public sellTax; // Sell tax in thousandths
+
     bool public migratedToAlgebra; // Whether the pool has migrated to Algebra
     bool public autoMigrationEnabled = true; // Whether auto-migration is enabled
     uint256 public migrationThreshold; // Threshold to trigger migration
@@ -49,7 +52,8 @@ contract LiquidityPool is ReentrancyGuard {
     event Step(string step, address indexed dataAddress, uint256 indexed value);
     event MigrationStarted(address indexed poolAddress, uint256 timestamp);
     event MigrationExecuted(address indexed token, uint256 tokenAmount, uint256 ethAmount);
-    
+    event MigrationCompleted(address indexed poolAddress, uint256 tokenAmount, uint256 ethAmount);
+
     
     modifier onlyFactory() {
         require(msg.sender == tokenFactory, "Caller is not the TokenFactory");
@@ -70,7 +74,7 @@ contract LiquidityPool is ReentrancyGuard {
         uint256 _initialTokenReserve,
         uint256 _buyTax,
         uint256 _sellTax,
-        address _algebraPoolInitializer,
+        address _migrator,
         bool _automigration
     ) external payable onlyFactory nonReentrant {
         require(token0 == address(0), "Pool already initialized");
@@ -79,8 +83,9 @@ contract LiquidityPool is ReentrancyGuard {
         reserve0 = _initialTokenReserve;
         buyTax = _buyTax;
         sellTax = _sellTax;
-        algebraPoolInitializer = _algebraPoolInitializer;
+        //algebraPoolInitializer = _algebraPoolInitializer;
         autoMigrationEnabled = _automigration; 
+        migrator = _migrator; 
         emit LiquidityAdded(msg.sender, _initialTokenReserve);
     }
 
@@ -143,7 +148,7 @@ function migrate() internal nonReentrant {
     require(!migratedToAlgebra, "Already migrated to Algebra");
     require(address(migrator) != address(0), "Migrator address not set");
     require(address(token0) != address(0), "Token not set");
-    require(reserve1 >= migrationThreshold, "Threshold not met for migration");
+   // require(reserve1 >= migrationThreshold, "Threshold not met for migration");
 
     emit MigrationStarted(address(this), block.timestamp);
 
@@ -157,16 +162,17 @@ function migrate() internal nonReentrant {
         reserve1,
         address(this)
     );*/
-   bool success = IMigrator(migrator).initiateMigration{value: reserve1}(address(token0), reserve0);
+  address poolAddress = IMigrator(migrator).initiateMigration{value: reserve1}(address(token0), reserve0);
+    require(poolAddress != address(0), "Migration failed: pool address is zero");
 
-        emit MigrationExecuted(address(token0), reserve0, msg.value);
-    //require(success, "Migration failed");
-
-    // Update the state
+    algebraPoolAddress = poolAddress;
     migratedToAlgebra = true;
 
-   
+    emit MigrationCompleted(poolAddress, reserve0, reserve1);
 }
+
+   
+
     function buyToken()
         external
         payable
@@ -218,6 +224,7 @@ function migrate() internal nonReentrant {
         uint256 amountIn
     ) external nonReentrant returns (uint256 amountOut) {
         require(amountIn > 0, "Must sell some tokens");
+        require(!migratedToAlgebra, "Pool migrated to Algebra");
 
         uint256 newReserve0 = reserve0 + amountIn;
         uint256 quotient = ((reserve0 + X_DELTA_UPPER) * (reserve1 + Y_DELTA_UPPER)) / 
