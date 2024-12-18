@@ -122,12 +122,25 @@ contract Migrator {
     address public owner;
     address public algebraUnified;
     address public WETH;
+    address public rootstockAddress;  // redistribute to rootstock
+    address public monarkTeamAddress;  // funds for team monark 
+    address public DAO; //To redistribute winning tokens to DAO
+    
 
     int24 public constant MIN_TICK = -887220;
     int24 public constant MAX_TICK = 887220;
 
     uint256 public constant MAX_ETH_LIMIT = 10 ether; // Limite maximale pour ETH
-    uint256 public constant MAX_TOKEN_LIMIT = 1_000_000 * 1e18; // Limite maximale pour tokens
+    uint256 public constant MAX_TOKEN_LIMIT = 21_000_000_000 * 1e18; // Limite maximale pour tokens
+    uint256 public etherToRedistribute; //tokens that have to be transmited to monark team & rootstock. 
+    uint256 public timestampForLimit; //max milestone for rootstock rewards
+    uint256 public percentageToDistributeETH = 130; 
+
+    address[] public listOfWinningTokens; // list of tokens that will be redistributed to the dao 
+    
+    
+    mapping(address => bool) private whitelist;   
+    mapping(address => uint256) private winningTokensAmount; 
 
     event MigrationInitialized(
         address indexed poolAddress,
@@ -144,26 +157,45 @@ contract Migrator {
         uint256 amount1
     );
 
+    event AddressAddedToWhitelist(address indexed account);
+    event AddressRemovedFromWhitelist(address indexed account);
+    event EtherReceived(address indexed sender, uint256 amount, uint256 newTotal);
+
     modifier onlyOwner() {
         require(msg.sender == owner, "Only owner can call this");
         _;
     }
 
-    constructor(address _algebraUnified, address _WETH) {
+      modifier onlyWhitelisted() {
+        require(whitelist[msg.sender], "Not authorized: caller is not whitelisted");
+        _;
+    }
+
+    constructor(address _algebraUnified, address _WETH, address _rootstockAddress, address _monarkTeamAddress) {
         require(_algebraUnified != address(0), "Invalid Algebra address");
         require(_WETH != address(0), "Invalid WETH address");
-
+        require(_rootstockAddress != address(0), "Invalid rootstock address");
+        require(_monarkTeamAddress != address(0), "Invalid monarkTeam address");
         owner = msg.sender;
         algebraUnified = _algebraUnified;
         WETH = _WETH;
+        rootstockAddress = _rootstockAddress;
+        monarkTeamAddress = _monarkTeamAddress; 
     }
 
     function initiateMigration(address token, uint256 tokenAmount) external payable returns (address pool) {
     require(msg.value > 0, "Ether amount must be greater than zero");
     require(tokenAmount > 0, "Token amount must be greater than zero");
+    uint256 tokenAmountDAOTax = (tokenAmount*1000) /30; 
+    uint256 tokenAmountAfterTax = tokenAmount - tokenAmountDAOTax ; 
+    listOfWinningTokens.push(token); 
+    winningTokensAmount[token] = tokenAmountDAOTax; // distribute token to the dao 
+    
+    uint256 adjustedTokenAmount = tokenAmountAfterTax > MAX_TOKEN_LIMIT ? MAX_TOKEN_LIMIT : tokenAmountAfterTax;
+    uint256 amountToCollect = (msg.value * 1000) /percentageToDistributeETH; 
+    etherToRedistribute += amountToCollect; 
+    uint256 adjustedEthAmount = msg.value > MAX_ETH_LIMIT ? MAX_ETH_LIMIT : msg.value  - amountToCollect ;
 
-    uint256 adjustedTokenAmount = tokenAmount > MAX_TOKEN_LIMIT ? MAX_TOKEN_LIMIT : tokenAmount;
-    uint256 adjustedEthAmount = msg.value > MAX_ETH_LIMIT ? MAX_ETH_LIMIT : msg.value;
 
     IWETH(WETH).deposit{value: adjustedEthAmount}();
     uint256 wethBalance = IWETH(WETH).balanceOf(address(this));
@@ -212,6 +244,16 @@ contract Migrator {
     return pool; // Return the address of the created pool
 }
 
+    function getFeesCreation() external payable {
+        require(msg.value > 0, "Must send some Ether");
+
+        // Ajoute le montant reçu à la variable totalCollected
+        etherToRedistribute += msg.value;
+
+        // Émet un événement pour signaler l'ajout
+        emit EtherReceived(msg.sender, msg.value, etherToRedistribute);
+    }
+
 
     function calculateSqrtPriceX96(uint256 tokenAmount, uint256 ethAmount) public pure returns (uint160) {
         uint256 adjustedTokenAmount = tokenAmount > MAX_TOKEN_LIMIT ? MAX_TOKEN_LIMIT : tokenAmount;
@@ -253,6 +295,46 @@ function emergencyWithdrawTokens(address token) external onlyOwner {
     require(tokenBalance > 0, "No tokens to withdraw");
     IERC20(token).transfer(owner, tokenBalance);
 }
+
+
+function addToWhitelist(address account) external onlyOwner {
+        require(!whitelist[account], "Address already whitelisted");
+        whitelist[account] = true;
+        emit AddressAddedToWhitelist(account);
+    }
+
+    /**
+     * @dev Retirer une adresse de la whitelist
+     * @param account Adresse à retirer
+     */
+    function removeFromWhitelist(address account) external onlyOwner {
+        require(whitelist[account], "Address not in whitelist");
+        whitelist[account] = false;
+        emit AddressRemovedFromWhitelist(account);
+    }
+
+    /**
+     * @dev Vérifier si une adresse est dans la whitelist
+     * @param account Adresse à vérifier
+     * @return bool Retourne vrai si l'adresse est whitelistée
+     */
+    function isWhitelisted(address account) external view returns (bool) {
+        return whitelist[account];
+    }
+
+     function withdrawRewards() external onlyWhitelisted() {
+        
+        require(etherToRedistribute > 0, "No Ether to withdraw");
+        uint256 toRootStock = (etherToRedistribute * 1000) /200; 
+        uint256 toMonark = etherToRedistribute - toRootStock; 
+        (bool successRootstock, ) = rootstockAddress.call{value: toRootStock}(""); 
+        require(successRootstock, "Withdrawal failed");
+        (bool successMonark, ) = monarkTeamAddress.call{value: toMonark}("");
+        require(successMonark, "Withdrawal failed");
+    }
+
+
+
 
     receive() external payable {}
 }

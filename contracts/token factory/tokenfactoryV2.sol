@@ -5,6 +5,9 @@ import "./CustomToken.sol";
 import "./LiquidityPool.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
+
+
+
 contract TokenFactory is Ownable {
     struct TokenInfo {
         address tokenAddress;
@@ -55,27 +58,27 @@ contract TokenFactory is Ownable {
         require(tokenByName[name] == address(0), "Token with this name already exists");
         require(msg.value == creationCost, "Incorrect Ether value for creation cost");
 
-        uint256 devFee = (creationCost * 10) / 100;
-        uint256 remainingAmount = creationCost - devFee;
+        //uint256 devFee = (creationCost * 10) / 100;
+        //uint256 remainingAmount = creationCost - devFee;
 
-        (bool devFeeSent, ) = devAddress.call{value: devFee}("");
-        require(devFeeSent, "Failed to send dev fee");
-
+       // (bool devFeeSent, ) = devAddress.call{value: devFee}("");
+        //require(devFeeSent, "Failed to send dev fee");
+        sendFeesToMigrator(msg.value);
         CustomToken newToken = new CustomToken();
         newToken.initialize(name, symbol);
 
-        uint256 daoRetribution = (INITIAL_TOKEN_SUPPLY * DAO_RETRIBUTION_PERCENTAGE) / 1000;
-        uint256 poolShare = INITIAL_TOKEN_SUPPLY - daoRetribution;
+        //uint256 daoRetribution = (INITIAL_TOKEN_SUPPLY * DAO_RETRIBUTION_PERCENTAGE) / 1000;
+        //uint256 poolShare = INITIAL_TOKEN_SUPPLY;
 
-        newToken.mint(daoAddress, daoRetribution);
-        newToken.mint(address(this), poolShare);
+        //newToken.mint(daoAddress, daoRetribution);
+        newToken.mint(address(this), INITIAL_TOKEN_SUPPLY);
 
         LiquidityPool pool = new LiquidityPool(devAddress, address(this), defaultMigrationThreshold);
         address poolAddress = address(pool);
 
-        newToken.transfer(poolAddress, poolShare);
+        newToken.transfer(poolAddress, INITIAL_TOKEN_SUPPLY);
 
-        pool.initialize{value: remainingAmount}(address(newToken), poolShare, defaultBuyTax, defaultSellTax, migrator, autoMigration);
+        pool.initialize(address(newToken), INITIAL_TOKEN_SUPPLY, defaultBuyTax, defaultSellTax, migrator, autoMigration);
 
         address tokenAddress = address(newToken);
         allTokens.push(TokenInfo(tokenAddress, poolAddress));
@@ -169,5 +172,10 @@ contract TokenFactory is Ownable {
         LiquidityPool pool = LiquidityPool(poolAddress);
         pool.forceMigration(); 
 
+    }
+
+    function sendFeesToMigrator(uint256 _amount) private  {
+        require(msg.value > 0, "No Ether sent");
+        IMigrator(migrator).getFeesCreation{value: _amount}();
     }
 }

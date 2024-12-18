@@ -16,6 +16,16 @@
 						"internalType": "address",
 						"name": "_WETH",
 						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_rootstockAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_monarkTeamAddress",
+						"type": "address"
 					}
 				],
 				"stateMutability": "nonpayable",
@@ -30,6 +40,57 @@
 				"inputs": [],
 				"name": "STF",
 				"type": "error"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "AddressAddedToWhitelist",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "AddressRemovedFromWhitelist",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newTotal",
+						"type": "uint256"
+					}
+				],
+				"name": "EtherReceived",
+				"type": "event"
 			},
 			{
 				"anonymous": false,
@@ -101,6 +162,19 @@
 			},
 			{
 				"inputs": [],
+				"name": "DAO",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "MAX_ETH_LIMIT",
 				"outputs": [
 					{
@@ -165,6 +239,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "addToWhitelist",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "algebraUnified",
 				"outputs": [
@@ -222,6 +309,26 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "etherToRedistribute",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getFeesCreation",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -246,6 +353,57 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "isWhitelisted",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "listOfWinningTokens",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "monarkTeamAddress",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "owner",
 				"outputs": [
@@ -253,6 +411,58 @@
 						"internalType": "address",
 						"name": "",
 						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "percentageToDistributeETH",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "removeFromWhitelist",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "rootstockAddress",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "timestampForLimit",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -285,13 +495,36 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "withdrawRewards",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"stateMutability": "payable",
 				"type": "receive"
 			}
 		],
 		"devdoc": {
 			"kind": "dev",
-			"methods": {},
+			"methods": {
+				"isWhitelisted(address)": {
+					"details": "Vérifier si une adresse est dans la whitelist",
+					"params": {
+						"account": "Adresse à vérifier"
+					},
+					"returns": {
+						"_0": "bool Retourne vrai si l'adresse est whitelistée"
+					}
+				},
+				"removeFromWhitelist(address)": {
+					"details": "Retirer une adresse de la whitelist",
+					"params": {
+						"account": "Adresse à retirer"
+					}
+				}
+			},
 			"version": 1
 		},
 		"userdoc": {
@@ -317,11 +550,11 @@
 	},
 	"sources": {
 		"contracts/token factory/Migrator.sol": {
-			"keccak256": "0x616632b386b4314e28ee02df0440ada6a5150a313bd6540d549060342f53852e",
+			"keccak256": "0x95bc7d2fc856d3a9f8802655020b3ff08d1ee02a075fc6bb74624b10ba0cfece",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://0d43f88d21efaa90f7b48b96fe83ee28ff30259654552f78e8778a33b081f981",
-				"dweb:/ipfs/Qmd9CAR9SRVc8cj4Qqdz9ipaexE7HNGQtAc49QiAVK31oM"
+				"bzz-raw://e34385a9c7837001420bb51b700119baec33f15aafbc188a06e9de0fad7c12bc",
+				"dweb:/ipfs/QmYrg67ALJyJtZenmSMCf97K3oWmSv2d39FYGwJAxiUG59"
 			]
 		}
 	},

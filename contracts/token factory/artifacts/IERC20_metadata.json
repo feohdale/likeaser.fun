@@ -130,11 +130,11 @@
 	},
 	"sources": {
 		"contracts/token factory/Migrator.sol": {
-			"keccak256": "0x616632b386b4314e28ee02df0440ada6a5150a313bd6540d549060342f53852e",
+			"keccak256": "0x95bc7d2fc856d3a9f8802655020b3ff08d1ee02a075fc6bb74624b10ba0cfece",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://0d43f88d21efaa90f7b48b96fe83ee28ff30259654552f78e8778a33b081f981",
-				"dweb:/ipfs/Qmd9CAR9SRVc8cj4Qqdz9ipaexE7HNGQtAc49QiAVK31oM"
+				"bzz-raw://e34385a9c7837001420bb51b700119baec33f15aafbc188a06e9de0fad7c12bc",
+				"dweb:/ipfs/QmYrg67ALJyJtZenmSMCf97K3oWmSv2d39FYGwJAxiUG59"
 			]
 		}
 	},

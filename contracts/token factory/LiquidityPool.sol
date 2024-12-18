@@ -9,6 +9,8 @@ interface IMigrator {
         uint256 tokenAmount;
     }
 
+
+
     function initiateMigration(address token, uint256 tokenAmount) external payable returns (address);
 
 
@@ -19,6 +21,7 @@ interface IMigrator {
     function emergencyWithdraw() external;
 
     function emergencyWithdrawTokens(address token) external;
+    function getFeesCreation() external payable;
 }
 contract LiquidityPool is ReentrancyGuard {
     uint256 public constant X_DELTA_LOWER = 257627658726967931872702964;
@@ -286,5 +289,6 @@ function sqrt(uint256 x) internal pure returns (uint256) {
     }
     return y;
 }
+
 
 }

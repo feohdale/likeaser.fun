@@ -746,11 +746,11 @@
 			]
 		},
 		"contracts/token factory/LiquidityPool.sol": {
-			"keccak256": "0xb6a8ff707cfcb26233c3a7df7a2b1c170dc6801d48644c9d99a45c177d863c10",
+			"keccak256": "0x636b03fce511cc44919bda348ae60aedb67ca07590e20295957c045fcd36aaf3",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://effe95809269012da436a41eaad3180cb7ee1987bba6cc789c446f382bc56890",
-				"dweb:/ipfs/QmfYi6TbQFe6KoGGoSY2cvttve3sHVV615ZFqp5o2vxrmX"
+				"bzz-raw://0a864fd41e1a190352864ee69e28bdbc81b050c6e2a5598e9027688493228787",
+				"dweb:/ipfs/QmPSYpLypF59oYFGU4g3NVL5UhBZcq7uavT5h9wsZWGRqA"
 			]
 		}
 	},

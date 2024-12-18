@@ -51,6 +51,7 @@
 		"methodIdentifiers": {
 			"emergencyWithdraw()": "db2e21bc",
 			"emergencyWithdrawTokens(address)": "b2af127c",
+			"getFeesCreation()": "e42bbbd5",
 			"initiateMigration(address,uint256)": "18fd7858",
 			"updateAlgebraUnified(address)": "09fe2d34",
 			"updateWETH(address)": "fe9440d7"
@@ -75,6 +76,13 @@
 			"name": "emergencyWithdrawTokens",
 			"outputs": [],
 			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "getFeesCreation",
+			"outputs": [],
+			"stateMutability": "payable",
 			"type": "function"
 		},
 		{
